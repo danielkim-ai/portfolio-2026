@@ -1,0 +1,49 @@
+---
+title: "Policy Gradient Methods"
+date: 2025-09-01
+tags: ["RL", "policy-gradient", "TRPO", "PPO"]
+course: "CS285 Deep Reinforcement Learning"
+description: "Notes on policy gradient methods, TRPO, and PPO."
+draft: false
+---
+
+## 1. Policy Gradient Theorem
+
+The objective is to maximise expected return $J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}[R(\tau)]$.
+By the policy gradient theorem:
+
+$$
+\nabla_\theta J(\theta)
+  = \mathbb{E}_{\tau \sim \pi_\theta}\!\left[
+      \sum_{t=0}^{T} \nabla_\theta \log \pi_\theta(a_t \mid s_t)\, \hat{A}_t
+    \right]
+$$
+
+where $\hat{A}_t$ is an estimate of the advantage function.
+
+## 2. TRPO Objective
+
+Trust Region Policy Optimisation solves:
+
+$$
+\max_\theta \; \mathbb{E}_{s,a \sim \pi_{\theta_\text{old}}}\!\left[
+  \frac{\pi_\theta(a \mid s)}{\pi_{\theta_\text{old}}(a \mid s)} A^{\pi_{\theta_\text{old}}}(s,a)
+\right]
+\quad \text{s.t.} \quad
+\mathbb{E}_s\bigl[\mathrm{KL}\bigl(\pi_{\theta_\text{old}}(\cdot \mid s) \,\|\, \pi_\theta(\cdot \mid s)\bigr)\bigr] \le \delta
+$$
+
+## 3. PPO Clip Objective
+
+PPO simplifies this to a clipped surrogate:
+
+$$
+L^{\text{CLIP}}(\theta) = \mathbb{E}_t\!\left[
+  \min\!\left(
+    r_t(\theta)\hat{A}_t,\;
+    \operatorname{clip}(r_t(\theta),\, 1-\varepsilon,\, 1+\varepsilon)\hat{A}_t
+  \right)
+\right]
+$$
+
+where $r_t(\theta) = \dfrac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_\text{old}}(a_t \mid s_t)}$.

@@ -1,0 +1,108 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allEntries = await getCollection('coursework', ({ data }) => !data.draft);
+const entries = allEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const grouped = entries.reduce<Record<string, typeof entries>>((acc, entry) => {
+  const key = entry.data.course ?? 'Uncategorised';
+  (acc[key] ??= []).push(entry);
+  return acc;
+}, {});
+
+const courseNames = Object.keys(grouped).sort();
+---
+
+<BaseLayout
+  title="Coursework"
+  description="Lecture notes, problem sets, and study materials from graduate courses in reinforcement learning and machine learning."
+>
+  <header style="margin-bottom: 2.75rem;">
+    <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--color-text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem;">
+      Lecture Notes &amp; Study Materials
+    </p>
+    <h1>Coursework</h1>
+    <p style="color: var(--color-text-secondary); max-width: 34rem; margin-top: 0.75rem;">
+      Notes, derivations, and exercises from graduate courses.
+      Equations are rendered with KaTeX — formulas are copy-pasteable.
+    </p>
+  </header>
+
+  {courseNames.map((courseName) => (
+    <section style="margin-bottom: 3rem;">
+      <h2 style="font-size: 0.85rem; font-family: var(--font-mono); font-weight: 600; color: var(--color-text-muted); letter-spacing: 0.07em; text-transform: uppercase; border-bottom: 1px solid var(--color-border-light); padding-bottom: 0.5rem; margin-bottom: 1.1rem; margin-top: 0;">
+        {courseName}
+      </h2>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.1rem;">
+        {grouped[courseName].map((entry) => {
+          const dateStr = entry.data.date.toLocaleDateString('en-US', {
+            year: 'numeric', month: 'short', day: 'numeric',
+          });
+          return (
+            <li>
+              <a href={`/coursework/${entry.id}`} class="cw-row">
+                <span class="cw-row__title">{entry.data.title}</span>
+                <span class="cw-row__meta">
+                  <span class="cw-row__tags">
+                    {entry.data.tags.slice(0, 3).map((t) => (
+                      <span class="tag" style="font-size:0.68rem; padding:0.05rem 0.35rem;">{t}</span>
+                    ))}
+                  </span>
+                  <time class="cw-row__date" datetime={entry.data.date.toISOString()}>{dateStr}</time>
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  ))}
+
+  {entries.length === 0 && (
+    <p style="color: var(--color-text-muted); font-style: italic;">No notes published yet.</p>
+  )}
+</BaseLayout>
+
+<style>
+  .cw-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 0.65rem 0.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    transition: background-color 0.15s;
+  }
+  .cw-row:hover { background-color: var(--color-surface); text-decoration: none; }
+  .cw-row:hover .cw-row__title { color: var(--color-accent); }
+  .cw-row__title {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    flex: 1;
+    transition: color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cw-row__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+  }
+  .cw-row__tags { display: flex; gap: 0.2rem; flex-wrap: wrap; }
+  .cw-row__date {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    white-space: nowrap;
+  }
+  @media (max-width: 580px) {
+    .cw-row { flex-direction: column; gap: 0.35rem; }
+    .cw-row__title { white-space: normal; }
+    .cw-row__tags { display: none; }
+  }
+</style>

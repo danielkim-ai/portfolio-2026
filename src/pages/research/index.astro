@@ -1,0 +1,182 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allEntries = await getCollection('research', ({ data }) => !data.draft);
+const entries = allEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout
+  title="Research"
+  description="Publications and research projects in reinforcement learning and machine learning."
+>
+  <header style="margin-bottom: 2.75rem;">
+    <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--color-text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem;">
+      Publications &amp; Projects
+    </p>
+    <h1>Research</h1>
+    <p style="color: var(--color-text-secondary); max-width: 34rem; margin-top: 0.75rem;">
+      Peer-reviewed papers, preprints, and ongoing projects.
+    </p>
+  </header>
+
+  {entries.length === 0 && (
+    <p style="color: var(--color-text-muted); font-style: italic;">No publications yet.</p>
+  )}
+
+  <ol style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0;">
+    {entries.map((entry, i) => {
+      const dateStr = entry.data.date.toLocaleDateString('en-US', {
+        year: 'numeric', month: 'long',
+      });
+      const arxivUrl = entry.data.arxiv
+        ? `https://arxiv.org/abs/${entry.data.arxiv}`
+        : null;
+      return (
+        <li class="research-item">
+          <div class="research-item__num">[{entries.length - i}]</div>
+          <div class="research-item__body">
+            <a href={`/research/${entry.id}`} class="research-item__title">
+              {entry.data.title}
+            </a>
+            {entry.data.authors && (
+              <p class="research-item__authors">
+                {entry.data.authors.join(', ')}
+              </p>
+            )}
+            <p class="research-item__meta">
+              {entry.data.venue && (
+                <span class="research-item__venue">{entry.data.venue}</span>
+              )}
+              {entry.data.venue && <span class="research-item__sep">·</span>}
+              <time datetime={entry.data.date.toISOString()}>{dateStr}</time>
+            </p>
+            <div class="research-item__links">
+              {entry.data.tags.slice(0, 4).map((t) => (
+                <span class="tag" style="font-size:0.68rem;">{t}</span>
+              ))}
+              {arxivUrl && (
+                <a
+                  href={arxivUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="research-item__extlink"
+                >
+                  arXiv ↗
+                </a>
+              )}
+              {entry.data.doi && (
+                <a
+                  href={entry.data.doi}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="research-item__extlink"
+                >
+                  DOI ↗
+                </a>
+              )}
+              {entry.data.pdfUrl && (
+                <a
+                  href={entry.data.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="research-item__extlink research-item__extlink--pdf"
+                >
+                  PDF ↗
+                </a>
+              )}
+            </div>
+          </div>
+        </li>
+      );
+    })}
+  </ol>
+</BaseLayout>
+
+<style>
+  .research-item {
+    display: flex;
+    gap: 1.1rem;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--color-border-light);
+  }
+  .research-item:first-child { padding-top: 0; }
+
+  .research-item__num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    padding-top: 0.2rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+    width: 2rem;
+    text-align: right;
+  }
+
+  .research-item__body { flex: 1; }
+
+  .research-item__title {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    line-height: 1.45;
+    display: block;
+    margin-bottom: 0.35rem;
+    transition: color 0.15s;
+  }
+  .research-item__title:hover { color: var(--color-accent); text-decoration: none; }
+
+  .research-item__authors {
+    font-size: 0.83rem;
+    color: var(--color-text-secondary);
+    margin: 0 0 0.3rem;
+  }
+
+  .research-item__meta {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    margin: 0 0 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .research-item__venue {
+    font-weight: 600;
+    color: var(--color-accent);
+  }
+
+  .research-item__sep { opacity: 0.4; }
+
+  .research-item__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .research-item__extlink {
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    padding: 0.1rem 0.4rem;
+    text-decoration: none;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .research-item__extlink:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+    text-decoration: none;
+  }
+  .research-item__extlink--pdf {
+    color: var(--color-accent);
+    border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
+    background-color: var(--color-accent-light);
+  }
+</style>

@@ -1,0 +1,137 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  /** 페이지 제목 (<title> 태그에 표시) */
+  title?: string;
+  /** 메타 설명 */
+  description?: string;
+  /** 넓은 컨텐츠 영역 여부 (기본: false → 42rem narrow column) */
+  wide?: boolean;
+  /** Open Graph 이미지 URL */
+  ogImage?: string;
+}
+
+const {
+  title        = 'Research Portfolio',
+  description  = 'Reinforcement learning research, coursework notes, and writings.',
+  wide         = false,
+  ogImage      = '/og-default.png',
+} = Astro.props;
+
+const siteTitle   = 'RL Portfolio';
+const fullTitle   = title === siteTitle ? title : `${title} — ${siteTitle}`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://example.com');
+
+/* Determine active nav link */
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Meta -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:type"        content="website" />
+    <meta property="og:url"         content={canonicalURL} />
+    <meta property="og:title"       content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image"       content={ogImage} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- KaTeX CSS (CDN fallback for full render safety) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+      integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww"
+      crossorigin="anonymous"
+    />
+
+    <!-- Slot for per-page <head> additions -->
+    <slot name="head" />
+  </head>
+
+  <body>
+    <!-- ─── Navigation ──────────────────────────────────── -->
+    <header>
+      <nav class="site-nav" aria-label="Main navigation">
+        <div class="site-nav__inner">
+          <!-- Brand / Home link -->
+          <a href="/" class="site-nav__brand" aria-label="Home">
+            RL Portfolio
+          </a>
+
+          <!-- Nav links -->
+          <ul class="site-nav__links" role="list">
+            <li>
+              <a
+                href="/about"
+                data-active={isActive('/about') ? 'true' : 'false'}
+              >
+                About
+              </a>
+            </li>
+            <li>
+              <a
+                href="/research"
+                data-active={isActive('/research') ? 'true' : 'false'}
+              >
+                Research
+              </a>
+            </li>
+            <li>
+              <a
+                href="/coursework"
+                data-active={isActive('/coursework') ? 'true' : 'false'}
+              >
+                Coursework
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://github.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub (opens in new tab)"
+              >
+                <span>GitHub</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <!-- ─── Main Content ────────────────────────────────── -->
+    <div class="page-wrapper">
+      <main
+        id="main-content"
+        class:list={['page-content', { 'page-content--wide': wide }]}
+      >
+        <slot />
+      </main>
+
+      <!-- ─── Footer ──────────────────────────────────── -->
+      <footer class="site-footer">
+        <p>
+          &copy; {new Date().getFullYear()} RL Portfolio &mdash;
+          Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Astro</a>
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>

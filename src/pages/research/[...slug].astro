@@ -1,0 +1,136 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PdfDownloadButton from '../../components/PdfDownloadButton.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('research', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props:  { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+const {
+  title, date, tags, authors, venue, doi, arxiv, abstract, pdfUrl,
+} = entry.data;
+
+const dateStr = date.toLocaleDateString('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+
+// arXiv 링크
+const arxivUrl = arxiv ? `https://arxiv.org/abs/${arxiv}` : null;
+---
+
+<BaseLayout title={title} description={abstract ?? `${title} — Research`}>
+  <article>
+
+    <!-- ─── Header ───────────────────────────────────────────── -->
+    <header style="margin-bottom: 2.5rem;">
+      <!-- Venue badge -->
+      {venue && (
+        <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--color-accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem;">
+          {venue}
+        </p>
+      )}
+
+      <h1>{title}</h1>
+
+      <!-- Authors -->
+      {authors && authors.length > 0 && (
+        <p style="font-size: 0.9rem; color: var(--color-text-secondary); margin: 0.5rem 0 0;">
+          {authors.join(', ')}
+        </p>
+      )}
+
+      <!-- Date & Tags -->
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+        <time datetime={date.toISOString()} style="font-size: 0.8rem; color: var(--color-text-muted);">
+          {dateStr}
+        </time>
+        <span style="color: var(--color-border); font-size: 0.8rem;">·</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
+          {tags.map((t) => <span class="tag">{t}</span>)}
+        </div>
+      </div>
+
+      <!-- External links row -->
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin-top: 1.25rem;">
+        {pdfUrl && <PdfDownloadButton href={pdfUrl} label="Download PDF" />}
+        {arxivUrl && (
+          <a
+            href={arxivUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.82rem; font-weight:500; color:var(--color-text-secondary); border:1px solid var(--color-border); border-radius:5px; padding:0.5rem 0.9rem; text-decoration:none; transition: border-color 0.18s, color 0.18s;"
+          >
+            arXiv:{arxiv} ↗
+          </a>
+        )}
+        {doi && (
+          <a
+            href={doi}
+            target="_blank"
+            rel="noopener noreferrer"
+            style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.82rem; font-weight:500; color:var(--color-text-secondary); border:1px solid var(--color-border); border-radius:5px; padding:0.5rem 0.9rem; text-decoration:none; transition: border-color 0.18s, color 0.18s;"
+          >
+            DOI ↗
+          </a>
+        )}
+      </div>
+    </header>
+
+    <!-- ─── Abstract ─────────────────────────────────────────── -->
+    {abstract && (
+      <section style="background: var(--color-surface); border-left: 3px solid var(--color-accent); border-radius: 0 6px 6px 0; padding: 1.1rem 1.25rem; margin-bottom: 2.5rem;">
+        <p style="font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--color-text-muted); margin-bottom: 0.5rem;">Abstract</p>
+        <p style="font-size: 0.95rem; line-height: 1.75; color: var(--color-text-secondary); margin: 0;">{abstract}</p>
+      </section>
+    )}
+
+    <hr />
+
+    <!-- ─── Body ──────────────────────────────────────────────── -->
+    <div class="prose">
+      <Content />
+    </div>
+
+    <hr />
+
+    <!-- ─── Footer actions ────────────────────────────────────── -->
+    <footer style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; padding-top: 0.5rem;">
+      <a
+        href="/research"
+        style="font-size: 0.85rem; color: var(--color-text-muted); text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem;"
+      >
+        ← All Research
+      </a>
+      <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+        {pdfUrl && <PdfDownloadButton href={pdfUrl} label="Download PDF" />}
+      </div>
+    </footer>
+
+  </article>
+</BaseLayout>
+
+<style>
+  /* Scoped prose styles for rendered MDX/MD content */
+  .prose :global(h2) { margin-top: 2.5rem; }
+  .prose :global(h3) { margin-top: 1.8rem; }
+  .prose :global(img) {
+    max-width: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--color-border-light);
+    margin: 1.5rem 0;
+  }
+  /* Math overflow on mobile */
+  .prose :global(.katex-display) {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+</style>

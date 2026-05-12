@@ -1,0 +1,227 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PdfDownloadButton from '../../components/PdfDownloadButton.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('coursework', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props:  { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const { title, date, tags, course, description, pdfUrl } = entry.data;
+
+const dateStr = date.toLocaleDateString('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+
+// Only h2/h3 for TOC
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<BaseLayout title={title} description={description ?? `${title} — Coursework`} wide>
+
+  <div class="cw-layout">
+
+    <!-- ─── Sidebar TOC ──────────────────────────────────────── -->
+    <aside class="cw-toc" aria-label="Table of contents">
+      <p class="cw-toc__label">Contents</p>
+      {tocHeadings.length > 0 ? (
+        <nav>
+          <ul class="cw-toc__list">
+            {tocHeadings.map((h) => (
+              <li class:list={['cw-toc__item', { 'cw-toc__item--h3': h.depth === 3 }]}>
+                <a href={`#${h.slug}`} class="cw-toc__link">
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : (
+        <p class="cw-toc__empty">No headings found.</p>
+      )}
+
+      <!-- PDF link in sidebar -->
+      {pdfUrl && (
+        <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--color-border-light);">
+          <PdfDownloadButton href={pdfUrl} label="Get PDF" />
+        </div>
+      )}
+    </aside>
+
+    <!-- ─── Main article ─────────────────────────────────────── -->
+    <article class="cw-article">
+
+      <header style="margin-bottom: 2rem;">
+        {course && (
+          <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--color-accent); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem;">
+            {course}
+          </p>
+        )}
+        <h1>{title}</h1>
+        {description && (
+          <p style="font-size: 1rem; color: var(--color-text-secondary); margin-top: 0.6rem;">{description}</p>
+        )}
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.9rem;">
+          <time datetime={date.toISOString()} style="font-size: 0.8rem; color: var(--color-text-muted);">
+            {dateStr}
+          </time>
+          <span style="color: var(--color-border);">·</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
+            {tags.map((t) => <span class="tag">{t}</span>)}
+          </div>
+        </div>
+      </header>
+
+      <hr />
+
+      <!-- Rendered MDX content -->
+      <div class="prose">
+        <Content />
+      </div>
+
+      <hr />
+
+      <!-- Footer -->
+      <footer style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem;">
+        <a href="/coursework" style="font-size: 0.85rem; color: var(--color-text-muted); text-decoration: none;">
+          ← All Notes
+        </a>
+        {pdfUrl && <PdfDownloadButton href={pdfUrl} label="Download PDF" />}
+      </footer>
+
+    </article>
+
+  </div>
+
+</BaseLayout>
+
+<style>
+  /* ─── Two-column layout ─────────────────────────────────────── */
+  .cw-layout {
+    display: grid;
+    grid-template-columns: 13rem 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  /* ─── TOC Sidebar ────────────────────────────────────────────── */
+  .cw-toc {
+    position: sticky;
+    top: calc(var(--nav-height) + 1.5rem);
+    max-height: calc(100vh - var(--nav-height) - 3rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+    padding-right: 0.5rem;
+  }
+
+  .cw-toc__label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .cw-toc__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .cw-toc__item { margin: 0; }
+
+  .cw-toc__item--h3 { padding-left: 0.9rem; }
+
+  .cw-toc__link {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    line-height: 1.5;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    transition: color 0.15s, background-color 0.15s;
+  }
+  .cw-toc__link:hover {
+    color: var(--color-accent);
+    background-color: var(--color-accent-light);
+    text-decoration: none;
+  }
+  .cw-toc__link.active {
+    color: var(--color-accent);
+    font-weight: 500;
+  }
+
+  .cw-toc__empty {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+
+  /* ─── Prose article ─────────────────────────────────────────── */
+  .prose :global(.katex-display) {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  .prose :global(img) {
+    max-width: 100%;
+    border-radius: 6px;
+    border: 1px solid var(--color-border-light);
+    margin: 1.5rem 0;
+  }
+
+  /* ─── Responsive: collapse sidebar on mobile ─────────────────── */
+  @media (max-width: 720px) {
+    .cw-layout {
+      grid-template-columns: 1fr;
+    }
+    .cw-toc {
+      position: static;
+      max-height: none;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border-light);
+      border-radius: 6px;
+      padding: 1rem 1.1rem;
+      order: -1; /* show above article on mobile */
+    }
+  }
+</style>
+
+<!-- Scroll-spy: highlight active TOC link -->
+<script>
+  const links = document.querySelectorAll<HTMLAnchorElement>('.cw-toc__link');
+  if (links.length > 0) {
+    const headingEls = Array.from(links)
+      .map(l => document.getElementById(l.getAttribute('href')!.slice(1)))
+      .filter(Boolean) as HTMLElement[];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const id = entry.target.id;
+          const link = document.querySelector<HTMLAnchorElement>(`.cw-toc__link[href="#${id}"]`);
+          if (entry.isIntersecting) {
+            links.forEach((l) => l.classList.remove('active'));
+            link?.classList.add('active');
+          }
+        });
+      },
+      { rootMargin: '-20% 0px -70% 0px' }
+    );
+
+    headingEls.forEach((el) => observer.observe(el));
+  }
+</script>
