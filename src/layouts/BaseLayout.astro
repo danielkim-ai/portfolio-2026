@@ -103,6 +103,14 @@ const isActive = (href: string) =>
             </li>
             <li>
               <a
+                href="/article"
+                data-active={isActive('/article') ? 'true' : 'false'}
+              >
+                Articles
+              </a>
+            </li>
+            <li>
+              <a
                 href="https://github.com/"
                 target="_blank"
                 rel="noopener noreferrer"

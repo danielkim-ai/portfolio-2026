@@ -35,7 +35,18 @@ const researchCollection = defineCollection({
   }),
 });
 
+// 아티클 컬렉션 (연구 철학, 기술 에세이)
+const articleCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/article' }),
+  schema: baseSchema.extend({
+    description: z.string(),
+    subtitle: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   coursework: courseworkCollection,
   research: researchCollection,
+  article: articleCollection,
 };

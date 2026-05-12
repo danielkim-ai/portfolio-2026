@@ -1,0 +1,359 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('article', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props:  { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+const { title, subtitle, description, date, tags } = entry.data;
+
+const dateStr = date.toLocaleDateString('en-US', {
+  year: 'numeric', month: 'long', day: 'numeric',
+});
+
+// Estimated reading time (~200 wpm)
+// We use headings count as a rough proxy here; actual word count would need JS
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<BaseLayout title={title} description={description}>
+
+  <article class="article-page">
+
+    <!-- ─── Header ─────────────────────────────────────────────── -->
+    <header class="article-header">
+      <div class="article-header__meta">
+        <time datetime={date.toISOString()} class="article-header__date">
+          {dateStr}
+        </time>
+        <span class="article-header__sep" aria-hidden="true">·</span>
+        <div class="article-header__tags">
+          {tags.map((t) => <span class="tag" style="font-size:0.7rem;">{t}</span>)}
+        </div>
+      </div>
+
+      <h1 class="article-header__title">{title}</h1>
+
+      {subtitle && (
+        <p class="article-header__subtitle">{subtitle}</p>
+      )}
+
+      <p class="article-header__desc">{description}</p>
+    </header>
+
+    <!-- ─── TOC (inline, above body on mobile; hidden on wide) ─── -->
+    {tocHeadings.length >= 3 && (
+      <nav class="article-toc" aria-label="Table of contents">
+        <p class="article-toc__label">In this article</p>
+        <ol class="article-toc__list">
+          {tocHeadings.filter(h => h.depth === 2).map((h) => (
+            <li>
+              <a href={`#${h.slug}`} class="article-toc__link">{h.text}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <hr class="article-divider" />
+
+    <!-- ─── Body ────────────────────────────────────────────────── -->
+    <div class="article-prose">
+      <Content />
+    </div>
+
+    <hr class="article-divider" />
+
+    <!-- ─── Footer ──────────────────────────────────────────────── -->
+    <footer class="article-footer">
+      <a href="/article" class="article-footer__back">← All Articles</a>
+      <div class="article-footer__tags">
+        {tags.map((t) => <span class="tag">{t}</span>)}
+      </div>
+    </footer>
+
+  </article>
+
+</BaseLayout>
+
+<style>
+  /* ─── Layout ─────────────────────────────────────────────────── */
+  .article-page {
+    /* Slightly wider than default content column for reading comfort */
+    max-width: 38rem;
+    margin: 0 auto;
+  }
+
+  /* ─── Header ─────────────────────────────────────────────────── */
+  .article-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .article-header__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .article-header__date {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.02em;
+  }
+
+  .article-header__sep {
+    color: var(--color-border);
+    font-size: 0.8rem;
+  }
+
+  .article-header__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .article-header__title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.75rem, 4vw, 2.4rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    margin: 0 0 0.6rem;
+  }
+
+  .article-header__subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    margin: 0 0 1rem;
+  }
+
+  .article-header__desc {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin: 0;
+    border-left: 2px solid var(--color-border);
+    padding-left: 1rem;
+    font-style: italic;
+  }
+
+  /* ─── TOC ────────────────────────────────────────────────────── */
+  .article-toc {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 2rem;
+  }
+
+  .article-toc__label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: 0.6rem;
+  }
+
+  .article-toc__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    counter-reset: toc-counter;
+  }
+
+  .article-toc__list li {
+    counter-increment: toc-counter;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .article-toc__list li::before {
+    content: counter(toc-counter, decimal-leading-zero);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  .article-toc__link {
+    font-size: 0.85rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    line-height: 1.6;
+    transition: color 0.15s;
+  }
+  .article-toc__link:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  /* ─── Divider ────────────────────────────────────────────────── */
+  .article-divider {
+    border: none;
+    border-top: 1px solid var(--color-border-light);
+    margin: 2.5rem 0;
+  }
+
+  /* ─── Prose ──────────────────────────────────────────────────── */
+  /*
+   * Reading-optimised typography:
+   * - Larger base size (19px effectively via 1.05em on serif)
+   * - Generous line-height (1.85)
+   * - Slightly wider paragraph measure
+   * - Drop cap on first paragraph
+   */
+  .article-prose {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--color-text-primary);
+  }
+
+  /* First paragraph drop cap */
+  .article-prose :global(> p:first-of-type::first-letter) {
+    float: left;
+    font-family: var(--font-serif);
+    font-size: 3.6em;
+    line-height: 0.82;
+    margin: 0.08em 0.08em 0 0;
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  /* Headings: slightly smaller than base layout to stay in body flow */
+  .article-prose :global(h2) {
+    font-family: var(--font-serif);
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin-top: 3rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-primary);
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .article-prose :global(h3) {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 500;
+    font-style: italic;
+    margin-top: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Paragraphs: wider spacing */
+  .article-prose :global(p) {
+    margin: 0 0 1.6rem;
+  }
+
+  /* Pull-quote style blockquote */
+  .article-prose :global(blockquote) {
+    border-left: none;
+    margin: 2rem 0;
+    padding: 0.5rem 0 0.5rem 0;
+    position: relative;
+    text-align: center;
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--color-text-secondary);
+  }
+  .article-prose :global(blockquote::before) {
+    content: '"';
+    font-family: var(--font-serif);
+    font-size: 4rem;
+    line-height: 0;
+    color: var(--color-border);
+    display: block;
+    margin-bottom: 0.5rem;
+    position: relative;
+    top: 0.5rem;
+  }
+
+  /* Inline code — use sans inside prose for contrast */
+  .article-prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.82em;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: 3px;
+    padding: 0.1em 0.35em;
+  }
+
+  /* Math: allow horizontal scroll on narrow screens */
+  .article-prose :global(.katex-display) {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 0.75rem 0;
+    scrollbar-width: thin;
+  }
+
+  /* Strong within prose */
+  .article-prose :global(strong) {
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  /* Figure captions */
+  .article-prose :global(figcaption) {
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+
+  /* Table within prose */
+  .article-prose :global(table) {
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+  }
+
+  /* ─── Footer ─────────────────────────────────────────────────── */
+  .article-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .article-footer__back {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .article-footer__back:hover {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  .article-footer__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+</style>
