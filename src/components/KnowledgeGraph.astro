@@ -8,37 +8,34 @@
   .knowledge-graph {
     width: 100%;
     height: 500px;
-    background: var(--color-bg);
-    border-radius: 8px;
+    background: #050505 !important;
+    border-radius: 1rem;
+    box-shadow: 0 0 30px rgba(0,0,0,0.3);
     border: 1px solid var(--color-border-light);
     overflow: hidden;
     position: relative;
   }
   
-  /* Make the graph look like a constellation */
-  :global(.dark) .knowledge-graph {
-    background: #0a0a0a;
-  }
+  /* Deep Space background is permanent; no dark mode override needed for container */
 
   :global(.node-label) {
     font-family: var(--font-mono);
     font-size: 10px;
     pointer-events: none;
-    fill: var(--color-text-secondary);
+    fill: #a0a0a0;
     transition: opacity 0.3s ease;
   }
 
   :global(.dark) :global(.node-label) {
-    fill: #e0e0e0;
+    fill: #e2e2e2;
   }
 
   :global(.link) {
-    stroke: var(--color-border);
-    transition: stroke-opacity 0.3s ease;
+    stroke: #444;
+    transition: stroke-opacity 0.3s ease, stroke 0.3s ease;
   }
-  
   :global(.dark) :global(.link) {
-    stroke: #333;
+    stroke: #222;
   }
   
   :global(.node) {
@@ -73,6 +70,8 @@
     { id: 'Stochastic Process', group: 'stats', size: 20 },
     { id: 'Sampling Theory', group: 'stats', size: 20 },
     { id: 'Quantisation', group: 'sys', size: 20 },
+    { id: 'Bayesian Statistics', group: 'stats', size: 20 },
+    { id: 'Distributed Learning', group: 'sys', size: 20 },
     
     // Specific (Small)
     { id: 'KKT Conditions', group: 'sys', size: 10 },
@@ -93,8 +92,12 @@
     { source: 'Sampling Theory', target: 'Stochastic Process' },
     { source: 'Sampling Theory', target: 'MCMC' },
     { source: 'Quantisation', target: 'Hessian Analysis' },
-    { source: 'Optimisation', target: 'Quantisation' }, // inferred connection
-    { source: 'Reinforcement Learning', target: 'Bellman Equation' } // inferred connection
+    { source: 'Optimisation', target: 'Quantisation' },
+    { source: 'Reinforcement Learning', target: 'Bellman Equation' },
+    { source: 'Bayesian Statistics', target: 'Reinforcement Learning' },
+    { source: 'Distributed Learning', target: 'Optimisation' },
+    { source: 'Differential Privacy', target: 'Bayesian Statistics' },
+    { source: 'Sampling Theory', target: 'Bayesian Statistics' }
   ];
 
   // Colour grouping based on strict specification
@@ -127,6 +130,16 @@
       .force('center', d3.forceCenter(width / 2, height / 2))
       .force('collide', d3.forceCollide().radius((d: any) => d.size + 15));
 
+    // Calculate Degree Centrality
+    const degrees: Record<string, number> = {};
+    nodes.forEach(n => degrees[n.id] = 0);
+    links.forEach(l => {
+      const srcId = typeof l.source === 'string' ? l.source : (l.source as GraphNode).id;
+      const tgtId = typeof l.target === 'string' ? l.target : (l.target as GraphNode).id;
+      if (degrees[srcId] !== undefined) degrees[srcId]++;
+      if (degrees[tgtId] !== undefined) degrees[tgtId]++;
+    });
+
     // Links
     const link = svg.append('g')
       .attr('class', 'links')
@@ -135,7 +148,7 @@
       .join('line')
       .attr('class', 'link')
       .attr('stroke-width', 1)
-      .attr('stroke-opacity', 0.6);
+      .attr('stroke-opacity', 0.2); // Default low opacity
 
     // Nodes group
     const nodeGroup = svg.append('g')
@@ -149,11 +162,15 @@
         .on('drag', dragged)
         .on('end', dragended) as any);
 
-    // Node circles with glow effect
+    // Node circles with glow effect based on centrality
     nodeGroup.append('circle')
-      .attr('r', d => Math.max(d.size / 3, 4)) // Smaller dots for the nodes itself
+      .attr('r', d => Math.max(d.size / 3, 4))
       .attr('fill', d => colorMap[d.group])
-      .style('filter', d => `drop-shadow(0 0 ${d.size / 2}px ${colorMap[d.group]})`);
+      .style('filter', d => {
+        const deg = degrees[d.id] || 1;
+        const blurRadius = (d.size / 2) + (deg * 2);
+        return `drop-shadow(0 0 ${blurRadius}px ${colorMap[d.group]})`;
+      });
 
     // Node labels
     nodeGroup.append('text')
@@ -185,13 +202,13 @@
       
       // Update links
       link.style('stroke-opacity', o => 
-        (o.source as GraphNode).id === d.id || (o.target as GraphNode).id === d.id ? 0.8 : 0.05
+        (o.source as GraphNode).id === d.id || (o.target as GraphNode).id === d.id ? 1.0 : 0.05
       );
     })
     .on('mouseout', () => {
       hoverNode = null;
       nodeGroup.style('opacity', 1);
-      link.style('stroke-opacity', 0.6);
+      link.style('stroke-opacity', 0.2); // Reset to 0.2
     })
     .on('click', (event, d) => {
       // Create a URL-friendly tag from the node ID (e.g. "optimisation")

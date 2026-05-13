@@ -19,50 +19,69 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.8"/>
           <stop offset="100%" stop-color="var(--color-text-primary)" stop-opacity="0.2"/>
         </linearGradient>
-        <linearGradient id="line-bl-center" x1="100" y1="320" x2="200" y2="200">
+        <linearGradient id="line-bl-center" x1="79" y1="270" x2="200" y2="200">
           <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.8"/>
           <stop offset="100%" stop-color="var(--color-text-primary)" stop-opacity="0.2"/>
         </linearGradient>
-        <linearGradient id="line-br-center" x1="300" y1="320" x2="200" y2="200">
+        <linearGradient id="line-br-center" x1="321" y1="270" x2="200" y2="200">
           <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.8"/>
           <stop offset="100%" stop-color="var(--color-text-primary)" stop-opacity="0.2"/>
         </linearGradient>
         
         <!-- Triangle border gradient -->
-        <linearGradient id="triangle-border" x1="200" y1="50" x2="200" y2="320">
+        <linearGradient id="triangle-border" x1="200" y1="60" x2="200" y2="270">
           <stop offset="0%" stop-color="var(--color-border)" stop-opacity="0.8"/>
-          <stop offset="100%" stop-color="var(--color-border-light)" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="var(--color-border-light)" stop-opacity="0.4"/>
         </linearGradient>
+
+        <!-- Arrowhead markers -->
+        <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-border)" />
+        </marker>
       </defs>
 
-      <!-- Background Triangle -->
-      <polygon points="200,60 90,310 310,310" fill="none" stroke="url(#triangle-border)" stroke-width="1.5" stroke-dasharray="6 6" />
+      <!-- Background Triangle with bi-directional arrows -->
+      <!-- Shrunk slightly so arrows don't overlap nodes -->
+      <line x1="180" y1="85" x2="95" y2="235" stroke="url(#triangle-border)" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+      <line x1="110" y1="270" x2="290" y2="270" stroke="url(#triangle-border)" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+      <line x1="305" y1="235" x2="220" y2="85" stroke="url(#triangle-border)" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)" />
 
       <!-- Connecting Lines to Center -->
       <line x1="200" y1="60" x2="200" y2="200" stroke="url(#line-top-center)" stroke-width="2" />
-      <line x1="90" y1="310" x2="200" y2="200" stroke="url(#line-bl-center)" stroke-width="2" />
-      <line x1="310" y1="310" x2="200" y2="200" stroke="url(#line-br-center)" stroke-width="2" />
+      <line x1="79" y1="270" x2="200" y2="200" stroke="url(#line-bl-center)" stroke-width="2" />
+      <line x1="321" y1="270" x2="200" y2="200" stroke="url(#line-br-center)" stroke-width="2" />
 
       <!-- Nodes -->
       <!-- Center Node: Daniel Kim -->
-      <circle cx="200" cy="200" r="28" fill="var(--color-surface)" stroke="var(--color-text-primary)" stroke-width="2" />
-      <text x="200" y="196" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Daniel</text>
-      <text x="200" y="210" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Kim</text>
+      <g>
+        <circle cx="200" cy="200" r="28" fill="var(--color-surface)" stroke="var(--color-text-primary)" stroke-width="2" />
+        <text x="200" y="196" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Daniel</text>
+        <text x="200" y="210" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Kim</text>
+      </g>
 
       <!-- Top Node: Stats (Theory) -->
-      <circle cx="200" cy="60" r="32" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2" />
-      <text x="200" y="56" font-family="var(--font-mono)" font-size="10" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Stats</text>
-      <text x="200" y="70" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(Theory)</text>
+      <g style="cursor: help;">
+        <title>Rigorous Statistical Inference</title>
+        <circle cx="200" cy="60" r="32" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2" />
+        <text x="200" y="56" font-family="var(--font-mono)" font-size="10" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Stats</text>
+        <text x="200" y="70" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(Theory)</text>
+      </g>
 
       <!-- Bottom-Left Node: CS (System) -->
-      <circle cx="90" cy="310" r="32" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2" />
-      <text x="90" y="306" font-family="var(--font-mono)" font-size="10" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">CS</text>
-      <text x="90" y="320" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(System)</text>
+      <g style="cursor: help;">
+        <title>High-performance Systems</title>
+        <circle cx="79" cy="270" r="32" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2" />
+        <text x="79" y="266" font-family="var(--font-mono)" font-size="10" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">CS</text>
+        <text x="79" y="280" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(System)</text>
+      </g>
 
       <!-- Bottom-Right Node: RL (Domain) -->
-      <circle cx="310" cy="310" r="32" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2" />
-      <text x="310" y="306" font-family="var(--font-mono)" font-size="10" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">RL</text>
-      <text x="310" y="320" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(Domain)</text>
+      <g style="cursor: help;">
+        <title>Optimal Sequential Decisions</title>
+        <circle cx="321" cy="270" r="32" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2" />
+        <text x="321" y="266" font-family="var(--font-mono)" font-size="10" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">RL</text>
+        <text x="321" y="280" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(Domain)</text>
+      </g>
     </svg>
   </div>
 

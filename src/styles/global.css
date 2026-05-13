@@ -14,8 +14,8 @@
   --font-mono:    'JetBrains Mono', 'Fira Code', monospace;
 
   /* Colour palette – warm off-white academic feel */
-  --color-bg:         #faf9f7;
-  --color-surface:    #f4f2ee;
+  --color-bg:         #f9f9f9;
+  --color-surface:    #f2f2f2;
   --color-border:     #ddd9d0;
   --color-border-light: #ede9e2;
 
@@ -36,15 +36,15 @@
 }
 
 :root.dark {
-  /* Colour palette – refined dark mode */
-  --color-bg:         #111111;
-  --color-surface:    #1a1a1a;
-  --color-border:     #333333;
-  --color-border-light: #222222;
+  /* Colour palette – refined dark mode (Midnight Navy) */
+  --color-bg:         #0a0f1e;
+  --color-surface:    #131a2f;
+  --color-border:     #24304d;
+  --color-border-light: #1b243b;
 
-  --color-text-primary:   #e0e0e0;
-  --color-text-secondary: #a0a0a0;
-  --color-text-muted:     #707070;
+  --color-text-primary:   #e2e2e2;
+  --color-text-secondary: #a8b0c4;
+  --color-text-muted:     #73809e;
 
   --color-accent:       #6e9ce6;   /* brighter ink blue for dark bg */
   --color-accent-hover: #98bdf2;
