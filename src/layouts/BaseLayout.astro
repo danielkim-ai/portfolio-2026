@@ -13,13 +13,13 @@ interface Props {
 }
 
 const {
-  title        = 'Research Portfolio',
-  description  = 'Reinforcement learning research, coursework notes, and writings.',
+  title        = 'Daniel Kim',
+  description  = 'Reinforcement learning research, coursework notes, and writings by Daniel Kim.',
   wide         = false,
   ogImage      = '/og-default.png',
 } = Astro.props;
 
-const siteTitle   = 'RL Portfolio';
+const siteTitle   = 'Daniel Kim';
 const fullTitle   = title === siteTitle ? title : `${title} — ${siteTitle}`;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://example.com');
 
@@ -72,7 +72,7 @@ const isActive = (href: string) =>
         <div class="site-nav__inner">
           <!-- Brand / Home link -->
           <a href="/" class="site-nav__brand" aria-label="Home">
-            RL Portfolio
+            Daniel Kim
           </a>
 
           <!-- Nav links -->
@@ -136,7 +136,7 @@ const isActive = (href: string) =>
       <!-- ─── Footer ──────────────────────────────────── -->
       <footer class="site-footer">
         <p>
-          &copy; {new Date().getFullYear()} RL Portfolio &mdash;
+          &copy; {new Date().getFullYear()} Daniel Kim &mdash;
           Built with <a href="https://astro.build" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">Astro</a>
         </p>
       </footer>
