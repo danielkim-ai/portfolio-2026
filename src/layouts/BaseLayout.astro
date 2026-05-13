@@ -82,6 +82,11 @@ const isActive = (href: string) =>
       }
       window.localStorage.setItem('theme', theme);
     </script>
+    <style is:global>
+      html.dark, html.dark body {
+        background-color: #0D0D0D !important;
+      }
+    </style>
   </head>
 
   <body>
