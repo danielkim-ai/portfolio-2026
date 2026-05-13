@@ -1,18 +1,18 @@
 ---
-title: "Preserve-Then-Quantize: Maintaining Representational Capacity in Post-Training Quantization"
+title: "Preserve-Then-Quantise: Maintaining Representational Capacity in Post-Training Quantisation"
 date: 2026-01-15
-tags: ["quantization", "LLM", "PTQ", "ICML"]
+tags: ["quantisation", "LLM", "PTQ", "ICML"]
 venue: "ICML 2026"
 authors: ["Your Name", "Co-author A", "Co-author B"]
 arxiv: "2601.00001"
 pdfUrl: "https://arxiv.org/pdf/2601.00001"
-abstract: "Post-training quantization (PTQ) reduces inference cost of large language models, but aggressive low-bit quantization degrades representational capacity. We propose Preserve-Then-Quantize (PTQ), a two-stage framework that first identifies and protects the most information-dense weight subspaces via a lightweight Fisher-information proxy, then applies mixed-precision quantization to the remaining weights. On LLaMA-3 70B, our method achieves near-lossless perplexity at W4A8 without any fine-tuning."
+abstract: "Post-training quantisation (PTQ) reduces inference cost of large language models, but aggressive low-bit quantisation degrades representational capacity. We propose Preserve-Then-Quantise (PTQ), a two-stage framework that first identifies and protects the most information-dense weight subspaces via a lightweight Fisher-information proxy, then applies mixed-precision quantisation to the remaining weights. On LLaMA-3 70B, our method achieves near-lossless perplexity at W4A8 without any fine-tuning."
 draft: true
 ---
 
 ## 1. Motivation
 
-Large language models are expensive to serve. A 70B-parameter model at FP16 requires ≈140 GB of VRAM, making single-GPU deployment infeasible. **Post-training quantization (PTQ)** reduces this cost without retraining, but aggressive quantisation—especially below 4-bit weights—degrades model quality.
+Large language models are expensive to serve. A 70B-parameter model at FP16 requires ≈140 GB of VRAM, making single-GPU deployment infeasible. **Post-training quantisation (PTQ)** reduces this cost without retraining, but aggressive quantisation—especially below 4-bit weights—degrades model quality.
 
 The core issue is *representational collapse*: quantisation noise is not uniformly harmful. Certain weight subspaces encode disproportionate information; clamping them causes cascading errors in attention heads and MLP projections.
 
@@ -27,9 +27,9 @@ S_{ij} = \frac{1}{|\mathcal{D}|} \sum_{x \in \mathcal{D}}
   \left(\frac{\partial \mathcal{L}(x; \mathbf{W})}{\partial w_{ij}}\right)^{\!2}
 $$
 
-High-saliency weights are *preserved* in higher precision; the remainder are quantized aggressively.
+High-saliency weights are *preserved* in higher precision; the remainder are quantised aggressively.
 
-### 2.2 Preserve-Then-Quantize (PTQ) Pipeline
+### 2.2 Preserve-Then-Quantise (PTQ) Pipeline
 
 Given a budget of $b_\text{avg}$ average bits per weight, we solve:
 
@@ -39,7 +39,7 @@ $$
 \frac{1}{L}\sum_{l=1}^{L} b_l = b_\text{avg}
 $$
 
-where $Q_{b}(\cdot)$ is the uniform quantizer at $b$ bits and $\mathbf{S}_l$ is the saliency matrix of layer $l$.
+where $Q_{b}(\cdot)$ is the uniform quantiser at $b$ bits and $\mathbf{S}_l$ is the saliency matrix of layer $l$.
 
 We solve this with a simple greedy algorithm: layers are ranked by $\operatorname{tr}(\mathbf{S}_l)$ and assigned bits from highest to lowest.
 
@@ -56,7 +56,7 @@ where $\Lambda = \operatorname{diag}(\lambda_1, \ldots, \lambda_d)$ with $\lambd
 ## 3. Theoretical Analysis
 
 **Proposition 1** *(Error bound).*
-Let $\hat{\mathbf{W}} = Q_b(\mathbf{W})$ be the quantized weight and $\Delta = \mathbf{W} - \hat{\mathbf{W}}$ the quantisation error. Then the change in the pre-softmax logit satisfies:
+Let $\hat{\mathbf{W}} = Q_b(\mathbf{W})$ be the quantised weight and $\Delta = \mathbf{W} - \hat{\mathbf{W}}$ the quantisation error. Then the change in the pre-softmax logit satisfies:
 
 $$
 \bigl\|\mathbf{y} - \hat{\mathbf{y}}\bigr\|_2
@@ -79,4 +79,4 @@ By allocating higher bits to layers with large $\operatorname{tr}(\mathbf{S}_l)$
 
 ## 5. Conclusion
 
-PTQ introduces a principled, computationally lightweight approach to mixed-precision post-training quantization. By protecting high-saliency weight subspaces, we recover near-lossless quality at W4A8 precision—enabling LLaMA-3 70B to run on a single 48 GB GPU.
+PTQ introduces a principled, computationally lightweight approach to mixed-precision post-training quantisation. By protecting high-saliency weight subspaces, we recover near-lossless quality at W4A8 precision—enabling LLaMA-3 70B to run on a single 48 GB GPU.

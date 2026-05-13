@@ -143,7 +143,7 @@ Classical wisdom says complexity is bad past a certain point — the famous U-sh
 
 When model capacity is pushed *far* beyond the interpolation threshold (where the model perfectly fits training data), something surprising happens: test error *decreases again*. This *double descent* phenomenon suggests that the classical bias-variance trade-off is not the whole story.
 
-The resolution lies in the **implicit regularization** of optimization algorithms like SGD. Gradient descent on overparameterized networks does not find an arbitrary interpolating solution — it finds a *minimum-norm* one, which happens to generalize well.
+The resolution lies in the **implicit regularisation** of optimisation algorithms like SGD. Gradient descent on overparameterised networks does not find an arbitrary interpolating solution — it finds a *minimum-norm* one, which happens to generalise well.
 
 Formally, among all parameter vectors $\theta$ satisfying $\hat{y}_i = f(x_i; \theta)$ for all $i$, SGD tends to converge to:
 

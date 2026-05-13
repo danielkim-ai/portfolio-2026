@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import KnowledgeGraph from '../components/KnowledgeGraph.astro';
 ---
 
 <BaseLayout
@@ -7,13 +8,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   description="Reinforcement learning research, coursework notes, and writings by Daniel Kim."
 >
   <!-- Hero -->
-  <section style="margin-bottom: 3.5rem;">
+  <section style="margin-bottom: 2.5rem;">
     <p style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem;">
       Reinforcement Learning Research
     </p>
     <h1>Hello, I study how agents learn.</h1>
     <p style="font-size: 1.05rem; color: var(--color-text-secondary); max-width: 36rem; margin-top: 1rem; text-decoration: none;">
-      I am a researcher interested in deep reinforcement learning, policy optimization,
+      I am a researcher interested in deep reinforcement learning, policy optimisation,
       and sample efficiency. This site collects my papers, lecture notes, and technical writings.
     </p>
     <div style="margin-top: 1.75rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
@@ -30,6 +31,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         About Me
       </a>
     </div>
+  </section>
+
+  <!-- Knowledge Graph -->
+  <section style="margin-bottom: 3.5rem;">
+    <h2 style="font-size: 1.1rem; border-bottom: none; margin-bottom: 1rem;">Interconnected Knowledge Graph</h2>
+    <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem;">
+      Hover over nodes to explore connections across Statistics, Computer Systems, and Reinforcement Learning.
+    </p>
+    <KnowledgeGraph />
   </section>
 
   <hr />

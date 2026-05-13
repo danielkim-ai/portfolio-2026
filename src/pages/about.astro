@@ -1,0 +1,73 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="About Daniel Kim, focusing on the intersection of RL, systems, and theory."
+>
+  <h1>About Me</h1>
+  <p style="font-size: 1.05rem; color: var(--color-text-secondary); max-width: 38rem;">
+    I am a researcher exploring the intersection of theoretical statistics, computer systems, and reinforcement learning. My goal is to build intelligent agents that are both mathematically grounded and computationally efficient.
+  </p>
+
+  <div class="svg-container" style="margin: 4rem 0; display: flex; justify-content: center; overflow: visible;">
+    <svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Gradients for lines -->
+        <linearGradient id="line-top-center" x1="200" y1="50" x2="200" y2="200">
+          <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="var(--color-text-primary)" stop-opacity="0.2"/>
+        </linearGradient>
+        <linearGradient id="line-bl-center" x1="100" y1="320" x2="200" y2="200">
+          <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="var(--color-text-primary)" stop-opacity="0.2"/>
+        </linearGradient>
+        <linearGradient id="line-br-center" x1="300" y1="320" x2="200" y2="200">
+          <stop offset="0%" stop-color="var(--color-accent)" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="var(--color-text-primary)" stop-opacity="0.2"/>
+        </linearGradient>
+        
+        <!-- Triangle border gradient -->
+        <linearGradient id="triangle-border" x1="200" y1="50" x2="200" y2="320">
+          <stop offset="0%" stop-color="var(--color-border)" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="var(--color-border-light)" stop-opacity="0.2"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Background Triangle -->
+      <polygon points="200,60 90,310 310,310" fill="none" stroke="url(#triangle-border)" stroke-width="1.5" stroke-dasharray="6 6" />
+
+      <!-- Connecting Lines to Center -->
+      <line x1="200" y1="60" x2="200" y2="200" stroke="url(#line-top-center)" stroke-width="2" />
+      <line x1="90" y1="310" x2="200" y2="200" stroke="url(#line-bl-center)" stroke-width="2" />
+      <line x1="310" y1="310" x2="200" y2="200" stroke="url(#line-br-center)" stroke-width="2" />
+
+      <!-- Nodes -->
+      <!-- Center Node: Daniel Kim -->
+      <circle cx="200" cy="200" r="28" fill="var(--color-surface)" stroke="var(--color-text-primary)" stroke-width="2" />
+      <text x="200" y="196" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Daniel</text>
+      <text x="200" y="210" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Kim</text>
+
+      <!-- Top Node: Stats (Theory) -->
+      <circle cx="200" cy="60" r="32" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2" />
+      <text x="200" y="56" font-family="var(--font-mono)" font-size="10" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Stats</text>
+      <text x="200" y="70" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(Theory)</text>
+
+      <!-- Bottom-Left Node: CS (System) -->
+      <circle cx="90" cy="310" r="32" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2" />
+      <text x="90" y="306" font-family="var(--font-mono)" font-size="10" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">CS</text>
+      <text x="90" y="320" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(System)</text>
+
+      <!-- Bottom-Right Node: RL (Domain) -->
+      <circle cx="310" cy="310" r="32" fill="var(--color-bg)" stroke="var(--color-accent)" stroke-width="2" />
+      <text x="310" y="306" font-family="var(--font-mono)" font-size="10" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">RL</text>
+      <text x="310" y="320" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(Domain)</text>
+    </svg>
+  </div>
+
+  <h2>Background</h2>
+  <p>
+    The triangle above illustrates my core philosophy. To solve complex problems in reinforcement learning, one must not only understand the underlying mathematical theory (Statistics & Probability) but also how to engineer robust and scalable systems (Computer Science). The domain of RL is where these two pillars converge.
+  </p>
+</BaseLayout>

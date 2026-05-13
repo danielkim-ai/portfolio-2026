@@ -1,0 +1,249 @@
+---
+// KnowledgeGraph.astro
+---
+
+<div id="knowledge-graph-container" class="knowledge-graph"></div>
+
+<style>
+  .knowledge-graph {
+    width: 100%;
+    height: 500px;
+    background: var(--color-bg);
+    border-radius: 8px;
+    border: 1px solid var(--color-border-light);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* Make the graph look like a constellation */
+  :global(.dark) .knowledge-graph {
+    background: #0a0a0a;
+  }
+
+  :global(.node-label) {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    pointer-events: none;
+    fill: var(--color-text-secondary);
+    transition: opacity 0.3s ease;
+  }
+
+  :global(.dark) :global(.node-label) {
+    fill: #e0e0e0;
+  }
+
+  :global(.link) {
+    stroke: var(--color-border);
+    transition: stroke-opacity 0.3s ease;
+  }
+  
+  :global(.dark) :global(.link) {
+    stroke: #333;
+  }
+  
+  :global(.node) {
+    cursor: pointer;
+    transition: filter 0.3s ease, opacity 0.3s ease;
+  }
+</style>
+
+<script>
+  import * as d3 from 'd3';
+
+  // Strict Types
+  interface GraphNode extends d3.SimulationNodeDatum {
+    id: string;
+    group: 'stats' | 'sys' | 'rl';
+    size: number;
+  }
+
+  interface GraphLink extends d3.SimulationLinkDatum<GraphNode> {
+    source: string | GraphNode;
+    target: string | GraphNode;
+  }
+
+  // Data Definition
+  const nodes: GraphNode[] = [
+    // Core (Large)
+    { id: 'Reinforcement Learning', group: 'rl', size: 30 },
+    { id: 'Optimisation', group: 'sys', size: 30 },
+    { id: 'Probability', group: 'stats', size: 30 },
+    
+    // Supporting (Medium)
+    { id: 'Stochastic Process', group: 'stats', size: 20 },
+    { id: 'Sampling Theory', group: 'stats', size: 20 },
+    { id: 'Quantisation', group: 'sys', size: 20 },
+    
+    // Specific (Small)
+    { id: 'KKT Conditions', group: 'sys', size: 10 },
+    { id: 'Adaptive Lasso', group: 'sys', size: 10 },
+    { id: 'Differential Privacy', group: 'stats', size: 10 },
+    { id: 'Bellman Equation', group: 'rl', size: 10 },
+    { id: 'MCMC', group: 'stats', size: 10 },
+    { id: 'Hessian Analysis', group: 'sys', size: 10 }
+  ];
+
+  const links: GraphLink[] = [
+    { source: 'Probability', target: 'Stochastic Process' },
+    { source: 'Stochastic Process', target: 'Reinforcement Learning' },
+    { source: 'Optimisation', target: 'Reinforcement Learning' },
+    { source: 'Optimisation', target: 'KKT Conditions' },
+    { source: 'KKT Conditions', target: 'Adaptive Lasso' },
+    { source: 'Differential Privacy', target: 'Sampling Theory' },
+    { source: 'Sampling Theory', target: 'Stochastic Process' },
+    { source: 'Sampling Theory', target: 'MCMC' },
+    { source: 'Quantisation', target: 'Hessian Analysis' },
+    { source: 'Optimisation', target: 'Quantisation' }, // inferred connection
+    { source: 'Reinforcement Learning', target: 'Bellman Equation' } // inferred connection
+  ];
+
+  // Colour grouping based on strict specification
+  const colorMap = {
+    'stats': '#4A90E2', // Cold blue
+    'sys': '#F5A623',   // Warm gold
+    'rl': '#7ED321'     // Neutral green
+  };
+
+  function renderGraph() {
+    const container = document.getElementById('knowledge-graph-container');
+    if (!container) return;
+    
+    // Clear any existing svg
+    container.innerHTML = '';
+
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+
+    const svg = d3.select(container)
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .attr('viewBox', [0, 0, width, height]);
+
+    // Force simulation
+    const simulation = d3.forceSimulation<GraphNode>(nodes)
+      .force('link', d3.forceLink<GraphNode, GraphLink>(links).id(d => d.id).distance(80))
+      .force('charge', d3.forceManyBody().strength(-300))
+      .force('center', d3.forceCenter(width / 2, height / 2))
+      .force('collide', d3.forceCollide().radius((d: any) => d.size + 15));
+
+    // Links
+    const link = svg.append('g')
+      .attr('class', 'links')
+      .selectAll('line')
+      .data(links)
+      .join('line')
+      .attr('class', 'link')
+      .attr('stroke-width', 1)
+      .attr('stroke-opacity', 0.6);
+
+    // Nodes group
+    const nodeGroup = svg.append('g')
+      .attr('class', 'nodes')
+      .selectAll('g')
+      .data(nodes)
+      .join('g')
+      .attr('class', 'node')
+      .call(d3.drag<any, GraphNode>()
+        .on('start', dragstarted)
+        .on('drag', dragged)
+        .on('end', dragended) as any);
+
+    // Node circles with glow effect
+    nodeGroup.append('circle')
+      .attr('r', d => Math.max(d.size / 3, 4)) // Smaller dots for the nodes itself
+      .attr('fill', d => colorMap[d.group])
+      .style('filter', d => `drop-shadow(0 0 ${d.size / 2}px ${colorMap[d.group]})`);
+
+    // Node labels
+    nodeGroup.append('text')
+      .attr('class', 'node-label')
+      .attr('dx', d => (d.size / 3) + 5)
+      .attr('dy', 3)
+      .text(d => d.id);
+
+    // Interaction state
+    let hoverNode: string | null = null;
+
+    // Build adjacency map for fast neighbor lookup
+    const linkedByIndex = new Set<string>();
+    links.forEach(d => {
+      linkedByIndex.add(`${(d.source as GraphNode).id},${(d.target as GraphNode).id}`);
+      linkedByIndex.add(`${(d.target as GraphNode).id},${(d.source as GraphNode).id}`);
+    });
+
+    function isConnected(a: GraphNode, b: GraphNode) {
+      return linkedByIndex.has(`${a.id},${b.id}`) || a.id === b.id;
+    }
+
+    // Hover interactions
+    nodeGroup.on('mouseover', (event, d) => {
+      hoverNode = d.id;
+      
+      // Update nodes
+      nodeGroup.style('opacity', o => isConnected(d, o) ? 1 : 0.1);
+      
+      // Update links
+      link.style('stroke-opacity', o => 
+        (o.source as GraphNode).id === d.id || (o.target as GraphNode).id === d.id ? 0.8 : 0.05
+      );
+    })
+    .on('mouseout', () => {
+      hoverNode = null;
+      nodeGroup.style('opacity', 1);
+      link.style('stroke-opacity', 0.6);
+    })
+    .on('click', (event, d) => {
+      // Create a URL-friendly tag from the node ID (e.g. "optimisation")
+      const tag = d.id.toLowerCase().replace(/\s+/g, '-');
+      // For now, redirect to research page
+      window.location.href = `/research`; 
+    });
+
+    // Tick function to update positions
+    simulation.on('tick', () => {
+      link
+        .attr('x1', d => (d.source as GraphNode).x!)
+        .attr('y1', d => (d.source as GraphNode).y!)
+        .attr('x2', d => (d.target as GraphNode).x!)
+        .attr('y2', d => (d.target as GraphNode).y!);
+
+      nodeGroup.attr('transform', d => `translate(${d.x},${d.y})`);
+    });
+
+    // Drag functions
+    function dragstarted(event: any, d: GraphNode) {
+      if (!event.active) simulation.alphaTarget(0.3).restart();
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+    
+    function dragged(event: any, d: GraphNode) {
+      d.fx = event.x;
+      d.fy = event.y;
+    }
+    
+    function dragended(event: any, d: GraphNode) {
+      if (!event.active) simulation.alphaTarget(0);
+      d.fx = null;
+      d.fy = null;
+    }
+  }
+
+  // Initial render
+  // Use a slight delay or Astro page load event to ensure container is ready
+  document.addEventListener('astro:page-load', renderGraph);
+  
+  // Fallback for first load if view transitions aren't used
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderGraph);
+  } else {
+    renderGraph();
+  }
+
+  // Handle window resize
+  window.addEventListener('resize', () => {
+    // Basic debounce
+    setTimeout(renderGraph, 200);
+  });
+</script>

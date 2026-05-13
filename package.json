@@ -1,6 +1,5 @@
 {
   "name": "danielkim-ai",
-
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -17,11 +16,15 @@
     "@astrojs/mdx": "^5.0.4",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.1",
+    "d3": "^7.9.0",
     "katex": "^0.16.10",
     "rehype-katex": "^7.0.1",
     "remark-math": "^6.0.0",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
     "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@types/d3": "^7.4.3"
   }
 }

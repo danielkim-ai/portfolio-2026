@@ -35,6 +35,22 @@
   --nav-height: 3.5rem;
 }
 
+:root.dark {
+  /* Colour palette – refined dark mode */
+  --color-bg:         #111111;
+  --color-surface:    #1a1a1a;
+  --color-border:     #333333;
+  --color-border-light: #222222;
+
+  --color-text-primary:   #e0e0e0;
+  --color-text-secondary: #a0a0a0;
+  --color-text-muted:     #707070;
+
+  --color-accent:       #6e9ce6;   /* brighter ink blue for dark bg */
+  --color-accent-hover: #98bdf2;
+  --color-accent-light: #1e293b;
+}
+
 /* ─── Reset & Base ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
