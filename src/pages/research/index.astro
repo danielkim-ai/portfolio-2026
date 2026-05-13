@@ -10,15 +10,60 @@ const entries = allEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.va
   title="Research"
   description="Publications and research projects in reinforcement learning and machine learning."
 >
-  <header style="margin-bottom: 2.75rem;">
+  <header style="margin-bottom: 3rem;">
     <p style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--color-text-muted); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.6rem;">
-      Publications &amp; Projects
+      Research Roadmap &amp; Interests
     </p>
-    <h1>Research</h1>
-    <p style="color: var(--color-text-secondary); max-width: 34rem; margin-top: 0.75rem;">
-      Peer-reviewed papers, preprints, and ongoing projects.
+    <h1>Future Horizons &amp; Research Directions</h1>
+    <p style="color: var(--color-text-secondary); max-width: 40rem; margin-top: 1rem; font-size: 1.05rem; line-height: 1.7;">
+      My academic pursuit lies at the intersection of rigorous statistical inference and high-performance machine learning, with a particular focus on the following domains:
     </p>
   </header>
+
+  <div class="research-cards-container">
+    <!-- Direction 1: Bayesian RL & Distributional Optimisation -->
+    <div class="research-card">
+      <h3>Bayesian RL &amp; Distributional Optimisation</h3>
+      <div class="research-card__tags">
+        <span class="tag">Variational Inference</span>
+        <span class="tag">Posterior Approximation</span>
+        <span class="tag">Epistemic Uncertainty</span>
+      </div>
+      <p>
+        Interrogating the convergence of Bayesian statistics and reinforcement learning to maximise sample efficiency within high-dimensional state spaces. By transitioning beyond conventional point estimation, I am investigating the structural guarantees of uncertainty estimation. This entails leveraging variational inference for robust posterior approximation and quantifying epistemic uncertainty within a Variational Actor-Critic framework.
+      </p>
+      <div class="research-card__diagram-link">
+        <strong>Symbolic Nexus:</strong> This trajectory sits firmly at the intersection of Stats and RL, bridging rigorous statistical probability with dynamic environment navigation.
+      </div>
+      <div class="research-card__challenge">
+        Challenge: Balancing Sample Efficiency with Computational Complexity in High-dimensional Stochastic Environments.
+      </div>
+    </div>
+
+    <!-- Direction 2: Privacy-Preserving Offline RL -->
+    <div class="research-card">
+      <h3>Privacy-Preserving Offline RL</h3>
+      <div class="research-card__tags">
+        <span class="tag">Differential Privacy</span>
+        <span class="tag">Machine Unlearning</span>
+        <span class="tag">Optimisation under Constraints</span>
+      </div>
+      <p>
+        Exploring the structural guarantees of $(\epsilon, \delta)$-Differential Privacy within offline reinforcement learning, particularly concerning sensitive medical and financial logs. Rather than relying on naive noise injection, the objective is to architect utility-optimised mechanisms that negotiate the privacy-utility trade-off via precise optimisation under constraints. This encompasses integrating machine unlearning for efficient policy updates and ensuring robust policy evaluation under stringent privacy boundaries.
+      </p>
+      <div class="research-card__diagram-link">
+        <strong>Symbolic Nexus:</strong> This pursuit demands a seamless integration across all three vertices of the trilemma (CS × Stats × RL), embedding systemic privacy constraints directly into statistical and sequential decision domains.
+      </div>
+      <div class="research-card__challenge">
+        Challenge: Architecting Utility-Optimised Mechanisms without Compromising $(\epsilon, \delta)$-Differential Privacy Guarantees.
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 5rem; margin-bottom: 2rem;">
+    <h2 style="font-family: var(--font-sans); font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--color-text-primary);">Publications &amp; Projects</h2>
+    <p style="color: var(--color-text-muted); font-size: 0.9rem;">Peer-reviewed papers, preprints, and ongoing implementations.</p>
+  </div>
 
   {entries.length === 0 && (
     <p style="color: var(--color-text-muted); font-style: italic;">No publications yet.</p>
@@ -178,5 +223,85 @@ const entries = allEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.va
     color: var(--color-accent);
     border-color: color-mix(in srgb, var(--color-accent) 35%, transparent);
     background-color: var(--color-accent-light);
+  }
+
+  /* Research Cards Styles */
+  .research-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .research-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  :global(.dark) .research-card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  .research-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  }
+  
+  :global(.dark) .research-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .research-card h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    color: var(--color-text-primary);
+  }
+
+  .research-card__tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  
+  .research-card__tags .tag {
+    font-size: 0.75rem;
+    background-color: transparent;
+    border: 1px solid var(--color-border-light);
+    color: var(--color-text-muted);
+  }
+
+  .research-card p {
+    font-size: 0.98rem;
+    color: var(--color-text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .research-card__diagram-link {
+    font-size: 0.88rem;
+    font-family: var(--font-sans);
+    color: var(--color-text-muted);
+    font-style: italic;
+    border-left: 2px solid var(--color-accent);
+    padding-left: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .research-card__challenge {
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border-light);
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    line-height: 1.5;
   }
 </style>
