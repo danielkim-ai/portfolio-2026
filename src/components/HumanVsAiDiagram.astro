@@ -1,0 +1,105 @@
+---
+---
+<div class="human-ai-diagram-container">
+  <div class="diagram-header">
+    <h3>Complementary Intelligence</h3>
+    <p>The synergy between human strategic agency and algorithmic computational power.</p>
+  </div>
+  
+  <div class="svg-wrapper">
+    <svg viewBox="0 0 800 450" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="humanGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#C1D7AE" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#C1D7AE" stop-opacity="0.1"/>
+        </linearGradient>
+        <linearGradient id="aiGrad" x1="1" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#EAE0D5" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#EAE0D5" stop-opacity="0.1"/>
+        </linearGradient>
+      </defs>
+
+      <!-- Human Circle -->
+      <g transform="translate(250, 220)">
+        <circle cx="0" cy="0" r="180" fill="url(#humanGrad)" stroke="var(--color-human-stroke, #A3B899)" stroke-width="2" class="venn-circle" />
+        <text x="-50" y="-120" font-family="var(--font-serif)" font-size="20" font-weight="bold" fill="var(--color-text-primary)" text-anchor="middle">Human</text>
+        <text x="-50" y="-100" font-family="var(--font-mono)" font-size="12" fill="var(--color-text-secondary)" text-anchor="middle">The Strategic Anchor</text>
+        
+        <text x="-50" y="-40" font-family="var(--font-sans)" font-size="14" fill="var(--color-text-primary)" text-anchor="middle">Contextual Judgement</text>
+        <text x="-50" y="-15" font-family="var(--font-sans)" font-size="14" fill="var(--color-text-primary)" text-anchor="middle">Moral Responsibility</text>
+        <text x="-50" y="10" font-family="var(--font-sans)" font-size="14" fill="var(--color-text-primary)" text-anchor="middle">Intent Definition</text>
+        
+        <text x="-50" y="70" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-human-stroke, #A3B899)" text-anchor="middle">Final Signature</text>
+        <text x="-50" y="90" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-human-stroke, #A3B899)" text-anchor="middle">Value Alignment</text>
+      </g>
+
+      <!-- AI Circle -->
+      <g transform="translate(550, 220)">
+        <circle cx="0" cy="0" r="180" fill="url(#aiGrad)" stroke="var(--color-ai-stroke, #D6CBBF)" stroke-width="2" class="venn-circle" />
+        <text x="50" y="-120" font-family="var(--font-serif)" font-size="20" font-weight="bold" fill="var(--color-text-primary)" text-anchor="middle">AI</text>
+        <text x="50" y="-100" font-family="var(--font-mono)" font-size="12" fill="var(--color-text-secondary)" text-anchor="middle">The Computational Engine</text>
+        
+        <text x="50" y="-40" font-family="var(--font-sans)" font-size="14" fill="var(--color-text-primary)" text-anchor="middle">Pattern Recognition</text>
+        <text x="50" y="-15" font-family="var(--font-sans)" font-size="14" fill="var(--color-text-primary)" text-anchor="middle">High-speed Optimisation</text>
+        <text x="50" y="10" font-family="var(--font-sans)" font-size="14" fill="var(--color-text-primary)" text-anchor="middle">Information Synthesis</text>
+        
+        <text x="50" y="70" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-ai-stroke, #D6CBBF)" text-anchor="middle">Evidence Aggregation</text>
+        <text x="50" y="90" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-ai-stroke, #D6CBBF)" text-anchor="middle">Scalable Inference</text>
+      </g>
+
+      <!-- Intersection: The Decision Nexus -->
+      <g transform="translate(400, 220)">
+        <text x="0" y="-15" font-family="var(--font-serif)" font-size="18" font-weight="bold" fill="var(--color-text-primary)" text-anchor="middle">Decision Nexus</text>
+        <line x1="-40" y1="5" x2="40" y2="5" stroke="var(--color-text-muted)" stroke-width="1" />
+        <text x="0" y="25" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Accelerated Insight</text>
+      </g>
+    </svg>
+  </div>
+</div>
+
+<style>
+  .human-ai-diagram-container {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 0.75rem;
+    padding: 2.5rem;
+    margin: 3rem 0;
+    --color-human-stroke: #A3B899;
+    --color-ai-stroke: #D6CBBF;
+  }
+  
+  :global(.dark) .human-ai-diagram-container {
+    --color-human-stroke: #4A5D3F;
+    --color-ai-stroke: #8B7E6F;
+  }
+  
+  .diagram-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .diagram-header h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+  }
+
+  .diagram-header p {
+    color: var(--color-text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 0;
+    font-family: var(--font-sans);
+  }
+
+  .svg-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .venn-circle {
+    transition: stroke 0.3s ease, fill 0.3s ease;
+  }
+</style>
