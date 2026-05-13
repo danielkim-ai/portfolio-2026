@@ -31,41 +31,36 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <BaseLayout
   title="About"
-  description="About Daniel Kim, focusing on the intersection of RL, systems, and theory."
+  description="The personal journey of Daniel Kim, tracing the trajectory from computer vision to Bayesian reinforcement learning."
 >
-  <h1>About Me</h1>
+  <h1>The Personal Journey</h1>
   <p style="font-size: 1.05rem; color: var(--color-text-secondary); max-width: 38rem;">
-    I am a researcher exploring the intersection of theoretical statistics, computer systems, and reinforcement learning. My goal is to build intelligent agents that are both mathematically grounded and computationally efficient.
+    Tracing the academic trajectory from the foundational mechanics of computer vision to the profound statistical rigour of Bayesian reinforcement learning.
   </p>
 
   <div class="svg-container" style="margin: 4rem 0; display: flex; justify-content: center; overflow: visible;">
+    <!-- SVG Content Unchanged -->
     <svg width="400" height="400" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- Arrowhead markers -->
         <marker id="arrow" class="svg-marker" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
           <path d="M 0 0 L 10 5 L 0 10 z" />
         </marker>
       </defs>
 
-      <!-- Background Triangle with bi-directional arrows -->
       <line x1="184" y1="88" x2="95" y2="242" class="svg-line" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)" />
       <line x1="111" y1="270" x2="289" y2="270" class="svg-line" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)" />
       <line x1="305" y1="242" x2="216" y2="88" class="svg-line" stroke-width="1.5" marker-start="url(#arrow)" marker-end="url(#arrow)" />
 
-      <!-- Connecting Lines to Center -->
       <line x1="200" y1="92" x2="200" y2="172" class="svg-line" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)" />
       <line x1="107" y1="254" x2="176" y2="214" class="svg-line" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)" />
       <line x1="293" y1="254" x2="224" y2="214" class="svg-line" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)" />
 
-      <!-- Nodes -->
-      <!-- Center Node: Daniel Kim -->
       <g>
         <circle cx="200" cy="200" r="28" class="center-bg" stroke="var(--color-text-primary)" stroke-width="2" />
         <text x="200" y="196" class="node-text" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Daniel</text>
         <text x="200" y="210" class="node-text" font-family="var(--font-sans)" font-size="12" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Kim</text>
       </g>
 
-      <!-- Top Node: Stats (Theory) -->
       <g style="cursor: help;">
         <title>Rigorous Statistical Inference</title>
         <circle cx="200" cy="60" r="32" class="node-bg node-stroke" stroke-width="2" />
@@ -73,7 +68,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <text x="200" y="70" class="node-text" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(Theory)</text>
       </g>
 
-      <!-- Bottom-Left Node: CS (System) -->
       <g style="cursor: help;">
         <title>High-performance Systems</title>
         <circle cx="79" cy="270" r="32" class="node-bg node-stroke" stroke-width="2" />
@@ -81,7 +75,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <text x="79" y="280" class="node-text" font-family="var(--font-serif)" font-size="10" font-style="italic" fill="var(--color-text-secondary)" text-anchor="middle">(System)</text>
       </g>
 
-      <!-- Bottom-Right Node: RL (Domain) -->
       <g style="cursor: help;">
         <title>Optimal Sequential Decisions</title>
         <circle cx="321" cy="270" r="32" class="node-bg node-stroke" stroke-width="2" />
@@ -91,8 +84,39 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </svg>
   </div>
 
-  <h2>Background</h2>
-  <p>
-    The triangle above illustrates my core philosophy. To solve complex problems in reinforcement learning, one must not only understand the underlying mathematical theory (Statistics & Probability) but also how to engineer robust and scalable systems (Computer Science). The domain of RL is where these two pillars converge.
-  </p>
+  <section style="margin-bottom: 2rem;">
+    <h2>1. Foundation: The Mathematical Bedrock</h2>
+    <p>
+      My academic roots at Yonsei University (CS &amp; Applied Statistics) provided the indispensable mathematical bedrock for my research. Immersing myself in modules such as Real Analysis and Stochastic Processes, I developed an appreciation for the profound elegance of rigorous statistical inference. It became evident that without a robust mathematical foundation, any algorithmic architecture is fundamentally brittle.
+    </p>
+  </section>
+
+  <section style="margin-bottom: 2rem;">
+    <h2>2. Exploration: Confronting Uncertainty</h2>
+    <p>
+      My initial foray into deep learning commenced with Computer Vision, constructing real-time object detection pipelines (YOLOX, DeepSORT). As my focus shifted towards Continuous Control (SAC, MuJoCo) in Reinforcement Learning, I encountered a critical revelation: the sheer magnitude of <em>Uncertainty</em> in sequential decision-making. I realised that navigating these high-dimensional state-action spaces requires far more than heuristic optimisation; it demands a principled methodology to quantify and bound uncertainty.
+    </p>
+  </section>
+
+  <section style="margin-bottom: 2rem;">
+    <h2>3. Vision: Bayesian Foundations for Reliable Intelligence</h2>
+    <p>
+      This realisation culminated in my current trajectory: architecting Reliable Intelligence through Bayesian Foundations. I am deeply committed to integrating statistical rigour into intelligent agents, ensuring that models not only maximise sample efficiency but also exhibit predictable, provable behaviour. 
+    </p>
+  </section>
+
+  <section style="margin-bottom: 2rem;">
+    <h2>4. Leadership &amp; Collaboration</h2>
+    <p>
+      Beyond theoretical pursuits, my tenure as a Republic of Korea Air Force (ROKAF) Squad Leader fundamentally shaped my capacity for operational resilience and crisis management. I further honed my skills in multidisciplinary collaboration through Student Council leadership and by mentoring researchers at the Yonsei Artificial Intelligence (YAI) Club, where I spearheaded collective research efforts that ultimately secured the Best Academic Group Award.
+    </p>
+  </section>
+
+  <section style="margin-bottom: 2rem;">
+    <h2>Extra: Visual Communication</h2>
+    <p>
+      I strongly believe that research must be accessible to be impactful. Leveraging my proficiency in Adobe Photoshop and Illustrator, I actively employ visual communication to distil complex statistical models into intuitive, compelling diagrams, ensuring that my research resonates across diverse academic audiences.
+    </p>
+  </section>
+
 </BaseLayout>
