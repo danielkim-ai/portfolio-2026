@@ -11,6 +11,28 @@ In data science, we are always telling a story about the world — and like any 
 
 At the heart of every modeling decision lies a fundamental tension between two forces that pull in opposite directions. Call it the tug-of-war between **estimation error** and **approximation error**.
 
+<div class="analogy-card">
+  <div class="analogy-card__label">A Guiding Analogy</div>
+  <div class="analogy-card__side analogy-card__side--estimation">
+    <span class="analogy-card__icon">🗺️</span>
+    <p class="analogy-card__term">Estimation</p>
+    <p class="analogy-card__analogy">Drawing the map from scratch</p>
+    <p class="analogy-card__desc">
+      You survey the terrain with finite observations and try to reconstruct the true landscape.
+      More data means a more accurate map — but you can only draw what you can measure.
+    </p>
+  </div>
+  <div class="analogy-card__side analogy-card__side--approximation">
+    <span class="analogy-card__icon">🧭</span>
+    <p class="analogy-card__term">Approximation</p>
+    <p class="analogy-card__analogy">Finding the fastest route on an imperfect map</p>
+    <p class="analogy-card__desc">
+      Even with a perfect GPS signal and unlimited compute, a road network that omits certain streets
+      will never route you correctly — regardless of how many satellites you consult.
+    </p>
+  </div>
+</div>
+
 ## The Two Sources of Error
 
 Suppose the true relationship between inputs $x$ and outputs $y$ is governed by some unknown function $f^*$. We never see $f^*$ directly — we only see noisy samples $(x_i, y_i)$ drawn from some distribution $\mathcal{P}$.
@@ -50,6 +72,31 @@ $$
 
 This tells us something profound: **estimation error shrinks with data, approximation error does not**. The two errors move in opposite directions as we vary model complexity.
 
+<aside class="callout-experience">
+  <p class="callout-experience__label">Personal Experience</p>
+  <p class="callout-experience__title">When Lasso looked great — but the confidence intervals told a different story</p>
+  <div class="callout-experience__body">
+    <p>
+      During a high-dimensional data analysis project (gene expression, $p \approx 20{,}000$, $n \approx 300$),
+      I fit both Lasso and SCAD with cross-validated penalty parameters.
+      The <em>approximation</em> side looked excellent: prediction error on held-out folds was low,
+      the selected support made biological sense, and the coefficient paths were interpretable.
+    </p>
+    <p>
+      The problem emerged when I tried to attach standard errors.
+      Because $p \gg n$, the effective degrees of freedom were poorly defined,
+      bootstrap intervals were unreliable, and the debiased Lasso confidence intervals
+      covered nearly half the candidate genes — rendering most selections statistically uninformative.
+    </p>
+    <p>
+      The lesson was sharp: <strong>a model can fit the truth beautifully (low approximation error)
+      while telling you almost nothing you can rely on (high estimation error)</strong>.
+      In sparse high-dimensional settings, the two errors are not just in tension — they can
+      diverge completely, and conflating them leads to confident-sounding but unreproducible results.
+    </p>
+  </div>
+</aside>
+
 ## The Classical Bias-Variance View
 
 In the squared-loss setting, this decomposition takes a familiar form. For any test point $x$:
@@ -60,6 +107,29 @@ $$
 + \underbrace{\bigl(f^*(x) - \mathbb{E}[\hat{f}(x)]\bigr)^2}_{\text{bias}^2}
 + \underbrace{\mathbb{E}\bigl[(\hat{f}(x) - \mathbb{E}[\hat{f}(x)])^2\bigr]}_{\text{variance}}
 $$
+
+<div class="bv-annotation">
+  <div class="bv-annotation__header">
+    <span>Term</span>
+    <span>Statistical meaning</span>
+    <span>Our lens: Estimation vs. Approximation</span>
+  </div>
+  <div class="bv-annotation__row">
+    <span class="bv-annotation__term">σ²</span>
+    <span>Irreducible noise in the labels — no model can eliminate this.</span>
+    <span class="bv-annotation__meaning">Neither error type. A floor set by the world itself.</span>
+  </div>
+  <div class="bv-annotation__row">
+    <span class="bv-annotation__term">Bias²</span>
+    <span>Systematic gap between the best model in 𝓗 and the true f*.</span>
+    <span class="bv-annotation__meaning"><strong>Approximation error.</strong> Fixed by the choice of model family, not by data. Shrinks only when you expand 𝓗.</span>
+  </div>
+  <div class="bv-annotation__row">
+    <span class="bv-annotation__term">Variance</span>
+    <span>Fluctuation of f̂ across different training draws of size n.</span>
+    <span class="bv-annotation__meaning"><strong>Estimation error.</strong> Shrinks as n → ∞. Inflated by complex models chasing noise.</span>
+  </div>
+</div>
 
 **Bias** corresponds to approximation error: a rigid model that cannot represent $f^*$ will systematically mis-predict, regardless of data.
 
