@@ -2,34 +2,34 @@
   <img src="public/assets/symbolic-diagram.svg" width="350" alt="Stats-CS-RL Symbolic Diagram" />
 </p>
 
-<h1 align="center">Daniel Kim</h1>
-<p align="center">
-  <em>Architecting Reliable Intelligence through Bayesian Foundations</em>
-</p>
+<h1 align="center">ARCHITECTING RELIABLE INTELLIGENCE THROUGH BAYESIAN FOUNDATIONS</h1>
+<h3 align="center">Navigating the nexus of sequential decision-making and statistical rigour</h3>
 
 ---
 
-## 🔬 Future Horizons & Research Directions
+## 🔬 Research Interests
 
-My academic pursuit lies at the intersection of rigorous statistical inference and high-performance machine learning. I am dedicated to interrogating the structural guarantees of intelligent systems, with a particular focus on the following domains:
+My academic pursuit lies at the intersection of rigorous statistical inference and high-performance machine learning. I am dedicated to interrogating the structural guarantees of intelligent systems.
 
-### 1. Bayesian Reinforcement Learning & Distributional Optimisation
-**Keywords:** *Variational Inference, Posterior Approximation, Epistemic Uncertainty*
+### Bayesian Reinforcement Learning
+**Sample efficiency via uncertainty estimation & Variational inference.**
 
 Interrogating the convergence of Bayesian statistics and reinforcement learning to maximise sample efficiency within high-dimensional state spaces. By transitioning beyond conventional point estimation, I am investigating the structural guarantees of uncertainty estimation. This entails leveraging variational inference for robust posterior approximation and quantifying epistemic uncertainty within a Variational Actor-Critic framework.
 
-### 2. Privacy-Preserving Offline RL
-**Keywords:** *Differential Privacy, Machine Unlearning, Optimisation under Constraints*
+### Privacy-Preserving Offline RL
+**Differential privacy guarantees & Machine unlearning in sequential decision-making.**
 
 Exploring the structural guarantees of $(\epsilon, \delta)$-Differential Privacy within offline reinforcement learning, particularly concerning sensitive medical and financial logs. Rather than relying on naive noise injection, the objective is to architect utility-optimised mechanisms that negotiate the privacy-utility trade-off via precise optimisation under constraints. This encompasses integrating machine unlearning for efficient policy updates and ensuring robust policy evaluation under stringent privacy boundaries.
 
 ---
 
-## 🏛️ Academic Activities
+## 🎯 Current Focus
 
-* **Research Presentations**: Delivered rigorous analyses on sequential decision-making paradigms and statistical learning theory.
-* **Prototyping & Systems**: Contributed to the architectural design and deployment of reinforcement learning agents within highly constrained, stochastic environments.
-* **Philosophy of Tech**: Actively contributing to the discourse surrounding human-AI collaboration, advocating for the acceleration of human judgement rather than its replacement.
+Rather than mere implementation, my current focus is directed towards interrogating fundamental academic questions:
+
+* **Uncertainty Quantification:** How can we construct tight bounds on epistemic uncertainty to prevent catastrophic degradation in out-of-distribution state spaces?
+* **Utility-Optimised Privacy:** To what extent can we integrate $(\epsilon, \delta)$-Differential Privacy into offline policy evaluation without compromising the convergence properties of the target policy?
+* **Algorithmic Unlearning:** What are the theoretical prerequisites for provable machine unlearning in sequential decision-making paradigms, ensuring minimal computational overhead whilst maintaining model integrity?
 
 ---
 
