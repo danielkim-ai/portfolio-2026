@@ -1,0 +1,52 @@
+---
+---
+<div class="diagram-wrapper">
+  <svg viewBox="0 0 600 250" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="distGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#A3B899" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#A3B899" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <!-- Axis -->
+    <line x1="50" y1="200" x2="550" y2="200" stroke="var(--color-border)" stroke-width="2" />
+    
+    <!-- Distribution 1 (Arm A) -->
+    <path d="M 100 200 C 150 200, 150 100, 200 100 C 250 100, 250 200, 300 200" fill="url(#distGrad)" stroke="#A3B899" stroke-width="2" />
+    
+    <!-- Distribution 2 (Arm B - High Uncertainty, High Potential) -->
+    <path d="M 200 200 C 260 200, 260 50, 320 50 C 380 50, 380 200, 440 200" fill="url(#distGrad)" stroke="#A3B899" stroke-width="3" stroke-dasharray="6 4" />
+    
+    <!-- Distribution 3 (Arm C) -->
+    <path d="M 350 200 C 390 200, 390 120, 430 120 C 470 120, 470 200, 510 200" fill="url(#distGrad)" stroke="#A3B899" stroke-width="2" />
+
+    <!-- Commander / Focal Point (Sampling) -->
+    <!-- Representing the decision to sample from the highest drawn probability -->
+    <circle cx="320" cy="50" r="6" fill="var(--color-bg)" stroke="var(--color-text-primary)" stroke-width="3" />
+    <circle cx="320" cy="50" r="12" fill="none" stroke="#D6CBBF" stroke-width="2" opacity="0.8" />
+    
+    <line x1="320" y1="62" x2="320" y2="200" stroke="var(--color-text-primary)" stroke-width="2" stroke-dasharray="4 4" />
+    
+    <!-- Labels -->
+    <text x="330" y="45" font-family="var(--font-mono)" font-size="13" font-weight="600" fill="var(--color-text-primary)">Thompson Sample (Optimum)</text>
+    <text x="320" y="25" font-family="var(--font-sans)" font-size="11" fill="var(--color-text-secondary)" text-anchor="middle">Navigating Epistemic Uncertainty</text>
+    
+    <text x="200" y="225" font-family="var(--font-sans)" font-size="13" fill="var(--color-text-secondary)" text-anchor="middle">Policy A</text>
+    <text x="320" y="225" font-family="var(--font-sans)" font-size="14" fill="var(--color-text-primary)" font-weight="bold" text-anchor="middle">Policy B</text>
+    <text x="430" y="225" font-family="var(--font-sans)" font-size="13" fill="var(--color-text-secondary)" text-anchor="middle">Policy C</text>
+  </svg>
+</div>
+
+<style>
+  .diagram-wrapper {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--color-bg);
+    border: 1px dashed var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  .diagram-wrapper:hover {
+    border-color: var(--color-accent);
+  }
+</style>

@@ -1,0 +1,66 @@
+---
+---
+<div class="diagram-wrapper">
+  <svg viewBox="0 0 600 250" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+    
+    <!-- Left Side: Data & Shield -->
+    <g transform="translate(100, 150)">
+      <!-- Sensitive Data Nodes -->
+      <circle cx="-30" cy="10" r="10" fill="var(--color-border)" />
+      <circle cx="20" cy="-20" r="14" fill="var(--color-border)" />
+      <circle cx="80" cy="5" r="12" fill="var(--color-border)" />
+      <circle cx="130" cy="-15" r="16" fill="var(--color-border)" />
+      <circle cx="180" cy="20" r="11" fill="var(--color-border)" />
+      <circle cx="230" cy="-5" r="13" fill="var(--color-border)" />
+    </g>
+
+    <!-- DP Shield Overlay -->
+    <!-- A shield shape protecting the data nodes -->
+    <path d="M 200 40 C 330 40, 360 110, 200 230 C 40 110, 70 40, 200 40 Z" fill="#D6CBBF" fill-opacity="0.15" stroke="#D6CBBF" stroke-width="4" stroke-linejoin="round" />
+    
+    <!-- Shield Emblem / Text -->
+    <text x="200" y="100" font-family="var(--font-mono)" font-size="16" font-weight="bold" fill="var(--color-text-primary)" text-anchor="middle">(ε, δ)-DP Guarantee</text>
+    <text x="200" y="120" font-family="var(--font-sans)" font-size="12" fill="var(--color-text-secondary)" text-anchor="middle">Utility-Optimised Boundary</text>
+
+    <!-- Right Side: Machine Unlearning Lock/Deletion -->
+    <g transform="translate(420, 80)">
+      <!-- Database cylinder -->
+      <path d="M 0 0 C 0 -15, 70 -15, 70 0 L 70 70 C 70 85, 0 85, 0 70 Z" fill="none" stroke="var(--color-text-secondary)" stroke-width="2" />
+      <path d="M 0 0 C 0 15, 70 15, 70 0" fill="none" stroke="var(--color-text-secondary)" stroke-width="2" />
+      <path d="M 0 35 C 0 50, 70 50, 70 35" fill="none" stroke="var(--color-text-secondary)" stroke-width="2" stroke-dasharray="4 4" />
+      
+      <!-- Lock icon on the database -->
+      <rect x="25" y="-10" width="20" height="15" rx="3" fill="#A3B899" />
+      <path d="M 30 -10 V -20 C 30 -25, 40 -25, 40 -20 V -10" fill="none" stroke="#A3B899" stroke-width="2" />
+      
+      <!-- X mark for deletion / unlearning -->
+      <line x1="15" y1="30" x2="55" y2="70" stroke="var(--color-accent)" stroke-width="4" stroke-linecap="round" />
+      <line x1="55" y1="30" x2="15" y2="70" stroke="var(--color-accent)" stroke-width="4" stroke-linecap="round" />
+      
+      <text x="35" y="110" font-family="var(--font-sans)" font-size="13" font-weight="600" fill="var(--color-text-primary)" text-anchor="middle">Provable Unlearning</text>
+    </g>
+    
+    <!-- Connection arrow -->
+    <path d="M 320 135 C 360 135, 380 115, 405 115" fill="none" stroke="var(--color-border-light)" stroke-width="2" marker-end="url(#arrow)" stroke-dasharray="4 4" />
+    
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-border-light)" />
+      </marker>
+    </defs>
+  </svg>
+</div>
+
+<style>
+  .diagram-wrapper {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    background-color: var(--color-bg);
+    border: 1px dashed var(--color-border);
+    transition: border-color 0.3s ease;
+  }
+  .diagram-wrapper:hover {
+    border-color: var(--color-accent);
+  }
+</style>

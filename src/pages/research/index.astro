@@ -1,6 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import BayesianRlDiagram from '../../components/BayesianRlDiagram.astro';
+import PrivacyRlDiagram from '../../components/PrivacyRlDiagram.astro';
 
 const allEntries = await getCollection('research', ({ data }) => !data.draft);
 const entries = allEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -29,6 +31,9 @@ const entries = allEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.va
         <span class="tag">Posterior Approximation</span>
         <span class="tag">Epistemic Uncertainty</span>
       </div>
+      
+      <BayesianRlDiagram />
+
       <p>
         Interrogating the convergence of Bayesian statistics and reinforcement learning to maximise sample efficiency within high-dimensional state spaces. By transitioning beyond conventional point estimation, I am investigating the structural guarantees of uncertainty estimation. This entails leveraging variational inference for robust posterior approximation and quantifying epistemic uncertainty within a Variational Actor-Critic framework.
       </p>
@@ -48,6 +53,9 @@ const entries = allEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.va
         <span class="tag">Machine Unlearning</span>
         <span class="tag">Optimisation under Constraints</span>
       </div>
+      
+      <PrivacyRlDiagram />
+
       <p>
         Exploring the structural guarantees of $(\epsilon, \delta)$-Differential Privacy within offline reinforcement learning, particularly concerning sensitive medical and financial logs. Rather than relying on naive noise injection, the objective is to architect utility-optimised mechanisms that negotiate the privacy-utility trade-off via precise optimisation under constraints. This encompasses integrating machine unlearning for efficient policy updates and ensuring robust policy evaluation under stringent privacy boundaries.
       </p>

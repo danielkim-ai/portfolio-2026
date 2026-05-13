@@ -1,43 +1,48 @@
-# Astro Starter Kit: Minimal
+<p align="center">
+  <img src="public/assets/symbolic-diagram.svg" width="350" alt="Stats-CS-RL Symbolic Diagram" />
+</p>
 
-```sh
-npm create astro@latest -- --template minimal
-```
+<h1 align="center">Daniel Kim</h1>
+<p align="center">
+  <em>Architecting Reliable Intelligence through Bayesian Foundations</em>
+</p>
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+---
 
-## 🚀 Project Structure
+## 🔬 Future Horizons & Research Directions
 
-Inside of your Astro project, you'll see the following folders and files:
+My academic pursuit lies at the intersection of rigorous statistical inference and high-performance machine learning. I am dedicated to interrogating the structural guarantees of intelligent systems, with a particular focus on the following domains:
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+### 1. Bayesian Reinforcement Learning & Distributional Optimisation
+**Keywords:** *Variational Inference, Posterior Approximation, Epistemic Uncertainty*
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Interrogating the convergence of Bayesian statistics and reinforcement learning to maximise sample efficiency within high-dimensional state spaces. By transitioning beyond conventional point estimation, I am investigating the structural guarantees of uncertainty estimation. This entails leveraging variational inference for robust posterior approximation and quantifying epistemic uncertainty within a Variational Actor-Critic framework.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### 2. Privacy-Preserving Offline RL
+**Keywords:** *Differential Privacy, Machine Unlearning, Optimisation under Constraints*
 
-Any static assets, like images, can be placed in the `public/` directory.
+Exploring the structural guarantees of $(\epsilon, \delta)$-Differential Privacy within offline reinforcement learning, particularly concerning sensitive medical and financial logs. Rather than relying on naive noise injection, the objective is to architect utility-optimised mechanisms that negotiate the privacy-utility trade-off via precise optimisation under constraints. This encompasses integrating machine unlearning for efficient policy updates and ensuring robust policy evaluation under stringent privacy boundaries.
 
-## 🧞 Commands
+---
 
-All commands are run from the root of the project, from a terminal:
+## 🏛️ Academic Activities
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+* **Research Presentations**: Delivered rigorous analyses on sequential decision-making paradigms and statistical learning theory.
+* **Prototyping & Systems**: Contributed to the architectural design and deployment of reinforcement learning agents within highly constrained, stochastic environments.
+* **Philosophy of Tech**: Actively contributing to the discourse surrounding human-AI collaboration, advocating for the acceleration of human judgement rather than its replacement.
 
-## 👀 Want to learn more?
+---
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 📬 Contact Information
+
+I welcome discourse with fellow researchers and practitioners regarding potential collaborations or theoretical discussions.
+
+* **Email**: [coderpoirot@gmail.com](mailto:coderpoirot@gmail.com) / [daniel1kim@yonsei.ac.kr](mailto:daniel1kim@yonsei.ac.kr)
+* **LinkedIn**: [danielkim-ai](https://www.linkedin.com/in/danielkim-ai/)
+* **Portfolio**: [danielkim-ai.vercel.app](https://danielkim-ai.vercel.app)
+
+<br/>
+
+<p align="center">
+  <small><em>"The ultimate prerogative of choice must remain anchored in human agency, ensuring accountability within the algorithmic framework."</em></small>
+</p>
