@@ -3,7 +3,11 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const allEntries = await getCollection('article', ({ data }) => !data.draft);
-const entries = allEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const entries = allEntries.sort((a, b) => {
+  if (a.data.featured && !b.data.featured) return -1;
+  if (!a.data.featured && b.data.featured) return 1;
+  return b.data.date.valueOf() - a.data.date.valueOf();
+});
 ---
 
 <BaseLayout
@@ -34,6 +38,7 @@ const entries = allEntries.sort((a, b) => b.data.date.valueOf() - a.data.date.va
         <li class="article-row">
           <time class="article-row__date" datetime={entry.data.date.toISOString()}>
             {dateStr}
+            {entry.data.featured && <div style="color: var(--color-accent); font-weight: bold; margin-top: 0.25rem;">⭐ Featured</div>}
           </time>
           <div class="article-row__body">
             <a href={`/article/${entry.id}`} class="article-row__title">
