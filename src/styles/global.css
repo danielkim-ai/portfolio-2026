@@ -423,6 +423,22 @@ hr {
   margin: 0;
 }
 
+/* ─── Callout Dark Mode Overrides ─── */
+html.dark .callout-experience {
+  background: linear-gradient(135deg, #1c170d 0%, #120e06 100%);
+  border-color: #3b301a;
+  border-left-color: #c9973a;
+}
+html.dark .callout-experience * {
+  color: #E2E2E2 !important;
+}
+html.dark .callout-experience__label {
+  color: #d6af63 !important; /* Lighter gold for dark mode */
+}
+html.dark .callout-experience__label::before {
+  background: #d6af63 !important;
+}
+
 /* ─── Analogy Card ───────────────────────────────────────────── */
 .analogy-card {
   margin: 3rem 0;
