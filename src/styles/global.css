@@ -464,11 +464,39 @@ hr {
 
 .analogy-card__side--estimation {
   border-right: 1px solid var(--color-border-light);
-  background: linear-gradient(160deg, #f0f4fb 0%, #faf9f7 100%);
+  background-color: #F4F7FA;
 }
 
 .analogy-card__side--approximation {
-  background: linear-gradient(160deg, #f5fbf0 0%, #faf9f7 100%);
+  background-color: #F7FAF4;
+}
+
+/* ─── Analogy Card Dark Mode Overrides ─── */
+html.dark .analogy-card {
+  background-color: #0D0D0D;
+  border-color: #262626;
+}
+
+html.dark .analogy-card__label {
+  background-color: #151515;
+  border-bottom-color: #262626;
+  color: #E2E2E2;
+}
+
+html.dark .analogy-card__side {
+  border-color: #262626;
+  background-image: none; /* Just in case */
+}
+
+html.dark .analogy-card__side--estimation {
+  background-color: #121620;
+  border-right-color: #262626;
+  color: #E2E2E2;
+}
+
+html.dark .analogy-card__side--approximation {
+  background-color: #101A15;
+  color: #E2E2E2;
 }
 
 .analogy-card__icon {
