@@ -1,0 +1,44 @@
+---
+title: "Policy Learning Stability Under Reward Scaling"
+date: 2026-03-10
+tags: ["reinforcement-learning", "policy-gradient", "reward-shaping"]
+problem: "Studied the stability of policy learning under continuous reward-scale variation."
+method: "Applied Bayesian optimisation to dynamically adjust temperature parameters during training."
+result: "Achieved a 40% reduction in policy collapse variance across highly stochastic environments."
+stack: ["PyTorch", "Ray RLlib", "MuJoCo"]
+githubUrl: "https://github.com/danielkim-ai-repo/sample-project"
+category: "Reinforcement Learning"
+draft: false
+---
+
+## Motivation
+
+Standard reinforcement learning algorithms often exhibit significant instability when subject to continuous variations in reward scaling. This fragility impedes their deployment in real-world scenarios where reward functions are non-stationary or subject to adversarial perturbations. This project aims to systematically investigate and mitigate this instability.
+
+## Problem Setting
+
+We formalise the environment as a Markov Decision Process (MDP) subject to an external reward scaling factor $\alpha_t \in (0, 1]$. The objective is to learn a robust policy $\pi_\theta$ that maximises expected return without collapsing under extreme values of $\alpha_t$, specifically within the MuJoCo continuous control suite.
+
+## Method
+
+Our approach integrates Bayesian optimisation to dynamically adjust the exploration temperature parameter in entropy-regularised policy gradients (e.g., SAC). By treating the reward scale as a contextual variable, we construct a surrogate Gaussian Process model to predict optimal temperature schedules.
+
+## Experiment Setup
+
+- **Environments:** HalfCheetah-v4 and Ant-v4 (MuJoCo).
+- **Baselines:** Standard SAC, PPO with reward clipping.
+- **Evaluation Metric:** Average return over 100 evaluation episodes under varying $\alpha_t$ regimes.
+
+## Results
+
+The proposed method consistently outperformed standard baselines, exhibiting robust performance even when $\alpha_t$ fluctuated drastically. We observed a **40% reduction in variance** during periods of reward collapse, demonstrating the efficacy of dynamically scaled entropy regularisation.
+
+## Key Lessons Learned
+
+- **Temperature scaling is highly sensitive:** Static entropy coefficients fail to adapt to non-stationary reward distributions.
+- **Bayesian priors matter:** A well-calibrated prior significantly accelerates the adaptation of the temperature parameter, preventing early convergence to sub-optimal policies.
+
+## Repository Link
+
+The complete implementation, including training scripts and environment wrappers, is available on GitHub:
+[View Repository](https://github.com/danielkim-ai-repo/sample-project)

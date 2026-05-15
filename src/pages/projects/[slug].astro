@@ -1,0 +1,213 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('project', ({ data }) => !data.draft);
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props:  { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, date, problem, method, result, stack, githubUrl, category } = entry.data;
+
+const dateStr = date.toLocaleDateString('en-GB', {
+  year: 'numeric', month: 'long',
+});
+---
+
+<BaseLayout title={title} description={problem}>
+  <article class="project-page">
+    <header class="project-header">
+      <div class="project-header__meta">
+        <span class="project-category">{category}</span>
+        <span class="project-sep">·</span>
+        <time class="project-date" datetime={date.toISOString()}>{dateStr}</time>
+      </div>
+      
+      <h1 class="project-title">{title}</h1>
+      
+      <div class="project-abstract">
+        <div class="abstract-item">
+          <strong>Problem:</strong> {problem}
+        </div>
+        <div class="abstract-item">
+          <strong>Method:</strong> {method}
+        </div>
+        <div class="abstract-item">
+          <strong>Key Result:</strong> {result}
+        </div>
+      </div>
+      
+      <div class="project-meta-bottom">
+        <div class="project-stack">
+          {stack.map(s => <span class="tag">{s}</span>)}
+        </div>
+        {githubUrl && (
+          <a href={githubUrl} target="_blank" rel="noopener noreferrer" class="project-github-btn">
+            View Source Code ↗
+          </a>
+        )}
+      </div>
+    </header>
+
+    <hr class="project-divider" />
+
+    <div class="project-prose">
+      <Content />
+    </div>
+    
+    <footer style="margin-top: 4rem; text-align: center;">
+      <a href="/projects" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s;">
+        ← Back to Projects Archive
+      </a>
+    </footer>
+  </article>
+</BaseLayout>
+
+<style>
+  .project-page {
+    max-width: 42rem;
+    margin: 0 auto;
+  }
+
+  .project-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .project-header__meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .project-category {
+    color: var(--color-accent);
+    font-weight: 600;
+  }
+
+  .project-sep {
+    color: var(--color-border);
+  }
+
+  .project-date {
+    color: var(--color-text-muted);
+  }
+
+  .project-title {
+    font-family: var(--font-serif);
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--color-text-primary);
+    margin: 0 0 1.5rem;
+  }
+
+  .project-abstract {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: 6px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .abstract-item {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+  }
+
+  .abstract-item strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    margin-right: 0.3rem;
+  }
+
+  .project-meta-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+  }
+
+  .project-github-btn {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .project-github-btn:hover {
+    background: var(--color-bg);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+  }
+
+  .project-divider {
+    border: none;
+    border-top: 1px solid var(--color-border-light);
+    margin: 2.5rem 0;
+  }
+
+  .project-prose {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--color-text-primary);
+  }
+
+  .project-prose :global(h2) {
+    font-family: var(--font-sans);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-text-primary);
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: 0.4rem;
+  }
+
+  .project-prose :global(p) {
+    margin: 0 0 1.5rem;
+  }
+
+  .project-prose :global(ul),
+  .project-prose :global(ol) {
+    margin: 0 0 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .project-prose :global(li) {
+    margin-bottom: 0.5rem;
+  }
+  
+  .project-prose :global(strong) {
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+</style>

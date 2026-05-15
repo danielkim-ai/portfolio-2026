@@ -53,6 +53,10 @@ const isActive = (href: string) =>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
 
+    <!-- Analytics Placeholder -->
+    <!-- <script defer src="https://analytics.us.umami.is/script.js" data-website-id="YOUR-UMAMI-WEBSITE-ID"></script> -->
+    <!-- <script defer src="/_vercel/insights/script.js"></script> -->
+
     <!-- KaTeX CSS (CDN fallback for full render safety) -->
     <link
       rel="stylesheet"
@@ -128,6 +132,14 @@ const isActive = (href: string) =>
                 data-active={isActive('/coursework') ? 'true' : 'false'}
               >
                 Coursework
+              </a>
+            </li>
+            <li>
+              <a
+                href="/projects"
+                data-active={isActive('/projects') ? 'true' : 'false'}
+              >
+                Projects
               </a>
             </li>
             <li>

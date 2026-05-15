@@ -45,8 +45,29 @@ const articleCollection = defineCollection({
   }),
 });
 
+// 프로젝트 아카이브 컬렉션
+const projectCollection = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/project' }),
+  schema: baseSchema.extend({
+    problem: z.string(),
+    method: z.string(),
+    result: z.string(),
+    stack: z.array(z.string()),
+    githubUrl: z.string().url().optional(),
+    category: z.enum([
+      'Reinforcement Learning',
+      'Bayesian / Statistical Modelling',
+      'Offline RL / Sequential Decision Making',
+      'Systems / Engineering',
+      'Privacy / Robustness'
+    ]),
+    draft: z.boolean().default(false),
+  }),
+});
+
 export const collections = {
   coursework: courseworkCollection,
   research: researchCollection,
   article: articleCollection,
+  project: projectCollection,
 };
