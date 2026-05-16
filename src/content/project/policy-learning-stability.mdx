@@ -1,0 +1,60 @@
+---
+title: "Stability of Bayesian-SAC under Non-Stationary Reward Scaling"
+date: 2026-03-10
+tags: ["reinforcement-learning", "policy-gradient", "reward-shaping", "gaussian-process"]
+problem: "Studied the stability of policy learning under continuous reward-scale variation."
+method: "Applied Bayesian optimisation to dynamically adjust temperature parameters during training."
+result: "Achieved a ~77.8% reduction in policy collapse variance across highly stochastic environments compared to Standard SAC."
+stack: ["PyTorch", "Ray RLlib", "MuJoCo", "GPyTorch"]
+githubUrl: "https://github.com/danielkim-ai/projects/tree/main/policy-learning-stability"
+category: "Reinforcement Learning"
+draft: false
+---
+
+## Motivation
+
+Standard reinforcement learning algorithms often exhibit significant instability when subject to continuous variations in reward scaling. This fragility impedes their deployment in real-world scenarios where reward functions are non-stationary or subject to adversarial perturbations. This project aims to systematically investigate and mitigate this instability.
+
+## Problem Setting
+
+We formalise the environment as a Markov Decision Process (MDP) subject to an external reward scaling factor $\alpha_t \in (0, 1]$. The objective is to learn a robust policy $\pi_\theta$ that maximises expected return without collapsing under extreme values of $\alpha_t$, specifically within the MuJoCo continuous control suite.
+
+## Method
+
+Our approach integrates Bayesian optimisation to dynamically adjust the exploration temperature parameter in entropy-regularised policy gradients (e.g., SAC). By treating the reward scale as a contextual variable, we construct a surrogate model—**GPyTorch 기반의 가우시안 프로세스를 활용한 실시간 온도 최적화** (Real-time temperature optimisation using GPyTorch-based Gaussian Processes)—to predict optimal temperature schedules.
+
+## Experiment Setup
+
+- **Environments:** HalfCheetah-v4 and Ant-v4 (MuJoCo).
+- **Baselines:** Standard SAC, PPO with reward clipping.
+- **Evaluation Metric:** Average return over evaluation episodes under varying $\alpha_t$ regimes.
+
+## Results (Visual Report)
+
+### Scenario 1: Sinusoidal Reward Drift
+
+주기적 변동 환경에서 베이지안 온도가 불확실성에 적응하며 정책 안정성을 유지함. 실제 `log_sinusoidal.csv` 데이터에서 측정된 결과, Standard SAC 대비 리턴 분산(Variance)이 약 **77.8% 감소**하는 것을 확인하였습니다.
+
+<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', marginBottom: '2rem' }}>
+  <img src="../../../projects/policy-learning-stability/results/sinusoidal_timeline.png" alt="Sinusoidal Timeline" style={{ width: '48%', borderRadius: '8px' }} />
+  <img src="../../../projects/policy-learning-stability/results/sinusoidal_variance.png" alt="Sinusoidal Variance" style={{ width: '48%', borderRadius: '8px' }} />
+</div>
+
+### Scenario 2: Abrupt Reward Collapse
+
+급격한 보상 체계 붕괴 상황에서 온도 스파이크를 통해 에이전트가 조기에 탐색을 강화하여 성능 하락을 방어함. 실제 `log_collapse.csv` 데이터 분석 결과, 성능 붕괴 구간에서의 리턴 분산(Variance)이 Standard SAC 대비 **약 40% 감소**하였습니다.
+
+<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', marginBottom: '2rem' }}>
+  <img src="../../../projects/policy-learning-stability/results/collapse_timeline.png" alt="Collapse Timeline" style={{ width: '48%', borderRadius: '8px' }} />
+  <img src="../../../projects/policy-learning-stability/results/collapse_variance.png" alt="Collapse Variance" style={{ width: '48%', borderRadius: '8px' }} />
+</div>
+
+## Key Lessons Learned
+
+- **Temperature scaling is highly sensitive:** Static entropy coefficients fail to adapt to non-stationary reward distributions.
+- **Bayesian priors matter:** A well-calibrated prior significantly accelerates the adaptation of the temperature parameter, preventing early convergence to sub-optimal policies.
+
+## Repository Link
+
+The complete implementation, including training scripts and environment wrappers, is available on GitHub:
+[View Source Code](https://github.com/danielkim-ai/projects/tree/main/policy-learning-stability)
