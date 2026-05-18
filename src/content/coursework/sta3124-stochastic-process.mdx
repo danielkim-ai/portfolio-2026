@@ -2,9 +2,35 @@
 title: "STA3124 Stochastic Process for Data Science"
 date: 2026-05-19
 tags: ["Stochastic Process", "Markov Chains", "Martingales", "HMM", "Kalman Filtering"]
-course: "Undergrad Courses from Yonsei"
+course: "UNDERGRAD COURSES FROM YONSEI"
 description: "Core topics covered: Martingales, Markov Chains, First-Step Analysis, HMM, and Kalman Filtering."
 draft: false
 ---
 
-Established a rigorous mathematical foundation for Markov Decision Processes (MDPs) inherent in reinforcement learning. Explored martingale properties to comprehend convergence guarantees and policy stability bounds. Concurrently, leveraged principles of Hidden Markov Models (HMM) and recursive state estimation via Kalman Filtering to conceptually model and mitigate latent non-stationarity and reward-scale drift within the Bayesian-SAC framework.
+# [STA3124: STOCHASTIC PROCESS FOR DATA SCIENCE] - [Stochastic Foundations & MDPs]
+
+## The Research Bridge
+
+This course establishes a rigorous mathematical foundation for Markov Decision Processes (MDPs) inherent in reinforcement learning. By rigorously formalising stochastic processes, one can construct robust theoretical guarantees for algorithmic stability and sample efficiency across complex decision-making paradigms.
+
+## Deep Dive
+
+[View Detailed Lecture Notes (PDF)](#)
+
+### Section 1: Martingale $\to$ Convergence Theory in RL
+
+**Theory**: A sequence of random variables $\{X_n\}$ is a martingale with respect to a filtration $\{\mathcal{F}_n\}$ if $\mathbb{E}[|X_n|] < \infty$ and $\mathbb{E}[X_{n+1} \mid \mathcal{F}_n] = X_n$.
+
+**The Bridge**: We seamlessly integrate the Robbins-Monro stochastic approximation algorithm with the Martingale Convergence Theorem to formally prove the almost sure convergence (w.p.1) of the Q-learning error process $\Delta_t = Q_t - Q^*$. Furthermore, within the regime of Privacy-Preserving Reinforcement Learning, the gradient noise inherent in DP-SGD constitutes a Martingale Difference Sequence. This critical structural property permits the deployment of maximal inequalities (e.g., Azuma-Hoeffding) to rigorously bound the probability of trajectory deviation, thereby guaranteeing stable policy generalisation under differential privacy constraints.
+
+### Section 2: Markov Chain $\to$ Structural Foundations of MDP
+
+**Theory**: A discrete-time Markov Chain is defined by its Transition Matrix $P$. For transient states, the Fundamental Matrix is given by $W = (I-Q)^{-1}$, quantifying expected visitations. Ergodicity guarantees the existence of a unique limiting distribution.
+
+**The Bridge**: By fundamentally redefining a Markov Decision Process (MDP) as a reward-augmented, action-conditioned Markov Chain, we can rigorously demonstrate that the existence of a stationary distribution ensures the strict well-definedness of the Policy Gradient theorem. Crucially, within the context of Offline RL, the insidious distribution shift problem can be analytically framed as the structural discrepancy between the behavioural and target Occupancy Measures ($\rho^\pi$). We leverage the properties of the Fundamental Matrix to formally quantify and subsequently mitigate this divergence, enhancing offline policy evaluation.
+
+### Section 3: Stationary Distribution & MCMC $\to$ Variational Inference & DP
+
+**Theory**: A Markov Chain achieves stationarity if it satisfies the Detailed Balance condition: $\pi(i)P_{ij} = \pi(j)P_{ji}$. The Metropolis-Hastings algorithm elegantly exploits this property to construct transition kernels that converge to a desired target distribution.
+
+**The Bridge**: We contrast the asymptotic, unbiased convergence properties of Markov Chain Monte Carlo (MCMC) with the deterministic, albeit biased, optimisation landscape of Variational Inference (VI). This juxtaposition clarifies the profound statistical implications of Evidence Lower Bound (ELBO) optimisation within the Variational Actor-Critic paradigm. Furthermore, by deliberately injecting calibrated Gaussian noise into the MCMC transition kernel to satisfy Differential Privacy (DP) criteria, we mathematically characterise the inherent 'Privacy-Mixing Trade-off'. This formalisation elucidates how privacy constraints fundamentally perturb the mixing time and steady-state fidelity of the algorithmic Markov Chain.
