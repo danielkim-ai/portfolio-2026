@@ -1,5 +1,5 @@
 ---
-title: "STA3124 Stochastic Process for Data Science"
+title: "STOCHASTIC PROCESS FOR DATA SCIENCE"
 date: 2026-05-19
 tags: ["Stochastic Process", "Markov Chains", "Martingales", "HMM", "Kalman Filtering"]
 course: "UNDERGRAD COURSES FROM YONSEI"
@@ -34,3 +34,21 @@ This course establishes a rigorous mathematical foundation for Markov Decision P
 **Theory**: A Markov Chain achieves stationarity if it satisfies the Detailed Balance condition: $\pi(i)P_{ij} = \pi(j)P_{ji}$. The Metropolis-Hastings algorithm elegantly exploits this property to construct transition kernels that converge to a desired target distribution.
 
 **The Bridge**: We contrast the asymptotic, unbiased convergence properties of Markov Chain Monte Carlo (MCMC) with the deterministic, albeit biased, optimisation landscape of Variational Inference (VI). This juxtaposition clarifies the profound statistical implications of Evidence Lower Bound (ELBO) optimisation within the Variational Actor-Critic paradigm. Furthermore, by deliberately injecting calibrated Gaussian noise into the MCMC transition kernel to satisfy Differential Privacy (DP) criteria, we mathematically characterise the inherent 'Privacy-Mixing Trade-off'. This formalisation elucidates how privacy constraints fundamentally perturb the mixing time and steady-state fidelity of the algorithmic Markov Chain.
+
+### Section 4: HMM & Kalman Filtering $\to$ Latent State Estimation in Bayesian RL
+
+**Theory**: Hidden Markov Models (HMM) facilitate inference over unobserved states via Forward/Viterbi algorithms, whilst Kalman Filtering provides an optimal recursive solution for Gaussian State-Space models.
+
+**The Bridge**: We formally redefine the latent state estimation challenge within Partially Observable Markov Decision Processes (POMDPs) as a computationally tractable HMM smoothing problem. Within the Variational Actor-Critic framework, the recursive update of the belief state $b_t$ is mathematically analogous to the non-linear variational extension of Kalman Filtering (e.g., World Models). Furthermore, in the domain of Privacy-Preserving Reinforcement Learning, we rigorously analyse the posterior robustness of Noisy HMMs, demonstrating how observation perturbations fortify differential privacy whilst preserving inferential integrity.
+
+### Section 5: Brownian Motion & GBM $\to$ Continuous-time Policy Gradients
+
+**Theory**: Brownian Motion operates as a continuous-time stochastic process defined by independent Gaussian increments. Geometric Brownian Motion (GBM) extends this to model exponential growth subject to stochastic volatility.
+
+**The Bridge**: By elegantly conceptualising the temporal evolution of the policy parameter $\theta_t$ as a Langevin Dynamics Stochastic Differential Equation (SDE), we elucidate how the principled injection of Gaussian noise organically facilitates Bayesian posterior sampling. Moreover, within privacy-centric paradigms, the Gaussian Mechanism operates as a discrete-time approximation of Brownian Motion. We rigorously analyse how the noise scale variance $\sigma^2$ fundamentally modulates the convergence rate and terminal mixing time of the governing learning SDE.
+
+### Section 6: Branching Process $\to$ Analysis of Posterior Collapse
+
+**Theory**: A Branching Process models population evolution across generations, analytically determining Extinction Probability via Generating Functions $\phi(s)$.
+
+**The Bridge**: We intuitively draw a powerful mathematical isomorphic correspondence between the 'Posterior Collapse' phenomenon in Variational Inference and the extinction probability ($\pi_0$) of a Galton-Watson Branching Process. When the informational signal strength (the likelihood gradient) falls beneath a critical threshold ($\mu < 1$), the variational posterior degenerates completely into the uninformative prior. This formal branching process framework provides profound theoretical intuition into mitigating representation collapse in deep latent variable models.
