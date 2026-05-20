@@ -13,7 +13,7 @@ draft: false
 
 The foundational challenge of policy gradient methods lies in maintaining monotonic improvement whilst preventing catastrophic policy degradation. Standard policy gradients often suffer from high variance and step-size sensitivity, leading to unstable learning trajectories in complex, high-dimensional environments. To circumvent this, Trust Region Policy Optimisation (TRPO) imposes a Kullback-Leibler (KL) divergence constraint on policy updates, rigorously guaranteeing monotonic performance improvement by bounding the discrepancy between successive behavioural distributions.
 
-In contemporary empirical research, this theoretical framework is essential for designing robust, sample-efficient algorithms. Proximal Policy Optimization (PPO) distils the constrained optimisation of TRPO into a mathematically tractable, unconstrained objective using a clipped surrogate function. Understanding these theoretical underpinnings is paramount when diagnosing convergence issues, tuning regularisation parameters, and developing novel uncertainty-aware actor-critic architectures that must operate securely within stochastic domains.
+In contemporary empirical research, this theoretical framework is essential for designing robust, sample-efficient algorithms. Proximal Policy Optimisation (PPO) distils the constrained optimisation of TRPO into a mathematically tractable, unconstrained objective using a clipped surrogate function. Understanding these theoretical underpinnings is paramount when diagnosing convergence issues, tuning regularisation parameters, and developing novel uncertainty-aware actor-critic architectures that must operate securely within stochastic domains.
 
 ## Deep Dive
 
