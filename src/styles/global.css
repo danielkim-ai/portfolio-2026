@@ -57,6 +57,36 @@
   --color-accent-light: #1e293b;
 }
 
+/* ─── Mermaid & Diagram Variables ────────────────────────────── */
+:root {
+  --mermaid-text-color: #1a202c;
+  --mermaid-line-color: #4a5568;
+  --mermaid-bg-color: #f7fafc;
+  --mermaid-border-color: #e2e8f0;
+}
+
+:root.dark {
+  --mermaid-text-color: #f7fafc;
+  --mermaid-line-color: #a0aec0;
+  --mermaid-bg-color: transparent;
+  --mermaid-border-color: #4a5568;
+}
+
+/* ─── Diagram Container (Mermaid & Custom) ───────────────────── */
+.diagram-card {
+  background-color: #f9fafb; /* bg-gray-50 */
+  border: 1px solid #e5e7eb; /* border-gray-200 */
+  border-radius: 0.75rem; /* rounded-xl */
+  padding: 1.5rem; /* p-6 */
+  margin: 2rem 0; /* my-8 */
+  overflow-x: auto;
+}
+
+html.dark .diagram-card {
+  background-color: rgba(30, 41, 59, 0.5); /* bg-slate-800/50 */
+  border-color: #334155; /* border-slate-700 */
+}
+
 /* ─── Reset & Base ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
