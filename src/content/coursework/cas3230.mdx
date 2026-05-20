@@ -21,16 +21,23 @@ This module reframes mathematical foundations not as isolated abstractions, but 
 
 **Bridge:** The cornerstone of Reinforcement Learning, the Bellman Equation, can be rigorously reinterpreted through the lens of the Banach Fixed Point Theorem detailed in Chapter 20. Crucially, within the domain of Offline RL, the insidious phenomenon of Distributional Shift fundamentally challenges the theoretical guarantees of this framework. By formally analysing the contraction mapping properties of the Bellman Operator, we can meticulously dissect precisely how and when these stability guarantees deteriorate under non-stationary distributions, thereby forging a mathematical path towards more robust offline policy evaluation techniques.
 
-```mermaid
-graph LR
-    V0(("V_0")) -- "Bellman Operator T" --> V1(("V_1"))
-    V1 -- "T" --> V2(("V_2"))
-    V2 -. "T (Contraction)" .-> Vstar(("V*"))
-    style Vstar fill:#22c55e,stroke:#16a34a,color:white
-    style V0 fill:#e5e7eb,stroke:#9ca3af,color:black
-    style V1 fill:#e5e7eb,stroke:#9ca3af,color:black
-    style V2 fill:#e5e7eb,stroke:#9ca3af,color:black
-```
+<div className="my-8 flex flex-col md:flex-row items-center justify-center gap-4 bg-slate-800/50 p-6 rounded-xl border border-slate-700 font-mono text-sm">
+  <div className="flex flex-col items-center">
+    <div className="w-16 h-16 rounded-full bg-slate-700 border-2 border-slate-500 flex items-center justify-center text-xl font-bold text-slate-300 shadow-lg">V₀</div>
+  </div>
+  <div className="text-slate-400">-- T --&gt;</div>
+  <div className="flex flex-col items-center">
+    <div className="w-16 h-16 rounded-full bg-slate-700 border-2 border-slate-500 flex items-center justify-center text-xl font-bold text-slate-300 shadow-lg">V₁</div>
+  </div>
+  <div className="text-slate-400">-- T --&gt;</div>
+  <div className="flex flex-col items-center">
+    <div className="w-16 h-16 rounded-full bg-slate-700 border-2 border-slate-500 flex items-center justify-center text-xl font-bold text-slate-300 shadow-lg">V₂</div>
+  </div>
+  <div className="text-emerald-400 font-bold border-b border-dashed border-emerald-400/50 pb-1">-- Contraction --&gt;</div>
+  <div className="flex flex-col items-center">
+    <div className="w-16 h-16 rounded-full bg-emerald-600 border-2 border-emerald-400 flex items-center justify-center text-xl font-bold text-white shadow-[0_0_15px_rgba(52,211,153,0.5)]">V*</div>
+  </div>
+</div>
 
 ### [B] Bayesian RL & Uncertainty Quantification (Ch 8.2, 9)
 
@@ -38,17 +45,33 @@ graph LR
 
 **Bridge:** We bridge the imperative of efficient exploration in RL with the rigorous posterior estimation frameworks of Chapter 9. By leveraging the theoretical underpinnings of Gaussian distributions, we establish a robust paradigm for uncertainty quantification. Furthermore, drawing upon the Gaussian Diffusion concepts from Chapter 9.7, we formalise the mathematical equivalency between recent high-dimensional action space modelling in Offline RL via Diffusion Policies and the broader theoretical landscape of Score-based Generative Modelling.
 
-```mermaid
-graph LR
-    subgraph Forward Diffusion
-    X0["x_0 (Data)"] -- "Add Gaussian Noise" --> Xt["x_t"]
-    Xt -- "Add Noise" --> XT["x_T (Prior)"]
-    end
-    subgraph Reverse Diffusion
-    YT["x_T (Prior)"] -- "Score-based Denoising" --> Yt["x_t"]
-    Yt -- "Denoise" --> Y0["x_0 (Sample)"]
-    end
-```
+<div className="my-8 flex flex-col gap-6 bg-slate-800/50 p-6 rounded-xl border border-slate-700">
+  <div className="flex flex-col">
+    <span className="text-xs font-bold text-slate-400 mb-2 uppercase tracking-wider">Forward Diffusion (Adding Noise)</span>
+    <div className="flex items-center justify-between w-full">
+      <div className="px-4 py-2 bg-slate-700 rounded border border-slate-600 text-slate-200">x₀ (Data)</div>
+      <div className="flex-1 border-t-2 border-dashed border-slate-600 relative mx-2">
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-800 px-2 text-xs text-slate-400 whitespace-nowrap">+ Gaussian Noise</span>
+      </div>
+      <div className="px-4 py-2 bg-slate-700 rounded border border-slate-600 text-slate-200">x_t</div>
+      <div className="flex-1 border-t-2 border-dashed border-slate-600 relative mx-2"></div>
+      <div className="px-4 py-2 bg-slate-800 rounded border border-slate-500 text-slate-400 opacity-80">x_T (Prior)</div>
+    </div>
+  </div>
+  
+  <div className="flex flex-col">
+    <span className="text-xs font-bold text-blue-400 mb-2 uppercase tracking-wider">Reverse Diffusion (Denoising)</span>
+    <div className="flex items-center justify-between w-full flex-row-reverse">
+      <div className="px-4 py-2 bg-blue-900/40 rounded border border-blue-700/50 text-blue-200">x₀ (Sample)</div>
+      <div className="flex-1 border-t-2 border-solid border-blue-700/50 relative mx-2">
+         <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-slate-800 px-2 text-xs text-blue-400 text-center leading-tight whitespace-nowrap">Score-based Denoise</span>
+      </div>
+      <div className="px-4 py-2 bg-slate-700 rounded border border-slate-600 text-slate-200">x_t</div>
+      <div className="flex-1 border-t-2 border-solid border-blue-700/50 relative mx-2"></div>
+      <div className="px-4 py-2 bg-slate-800 rounded border border-slate-500 text-slate-400 opacity-80">x_T (Prior)</div>
+    </div>
+  </div>
+</div>
 
 ### [C] Privacy-Driven RL & Model Efficiency (Ch 5.3, 14, 18)
 
@@ -56,10 +79,27 @@ graph LR
 
 **Bridge:** This segment explicitly aligns empirical methodologies, such as LR-Q-LR quantisation strategies, with the formal mathematical bounds of the Best Low-Rank Approximation (Eckart-Young-Mirsky Theorem) delineated in Chapter 14.4. Additionally, we cast the stringent privacy guarantees of $(\epsilon, \delta)$-Differential Privacy as an entropy-constrained optimisation problem, leveraging Chapter 5.3. This perspective facilitates a rigorous, closed-form mathematical analysis of the fundamental convergence-rate trade-offs inherent when injecting calibrated Laplacian or Gaussian noise into Stochastic Gradient Descent (SGD).
 
-import QuantisationDiagram from '../../components/QuantisationDiagram.astro';
-
-<div className="my-8">
-  <QuantisationDiagram />
+<div className="my-8 flex flex-col items-center bg-slate-800/50 p-6 rounded-xl border border-slate-700">
+  <span className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">SVD Decomposition: A = UΣVᵀ</span>
+  <div className="flex flex-row items-center justify-center gap-4">
+    <div className="flex flex-col items-center">
+      <div className="w-24 h-32 bg-indigo-600/20 border border-indigo-400 rounded flex items-center justify-center text-xl font-mono text-indigo-300 shadow-lg">A</div>
+      <span className="text-xs text-slate-400 mt-2">m × n</span>
+    </div>
+    <div className="text-slate-300 font-bold text-2xl">=</div>
+    <div className="flex flex-col items-center">
+      <div className="w-16 h-32 bg-blue-600/20 border border-blue-400 rounded flex items-center justify-center text-xl font-mono text-blue-300 shadow-lg">U</div>
+      <span className="text-xs text-slate-400 mt-2">m × r</span>
+    </div>
+    <div className="flex flex-col items-center">
+      <div className="w-16 h-16 bg-emerald-600/20 border border-emerald-400 rounded flex items-center justify-center text-xl font-mono text-emerald-300 shadow-lg">Σ</div>
+      <span className="text-xs text-slate-400 mt-2">r × r</span>
+    </div>
+    <div className="flex flex-col items-center">
+      <div className="w-32 h-16 bg-purple-600/20 border border-purple-400 rounded flex items-center justify-center text-xl font-mono text-purple-300 shadow-lg">Vᵀ</div>
+      <span className="text-xs text-slate-400 mt-2">r × n</span>
+    </div>
+  </div>
 </div>
 
 ## Mathematical Rigor
