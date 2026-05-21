@@ -122,3 +122,42 @@ The generated $\epsilon$-sensitivity and privacy loss graphs mathematically subs
     <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 10: Accumulated privacy loss tracked via RDP sequential composition.</figcaption>
   </figure>
 </div>
+
+## Discussion: Limitations and Future Directions
+
+While the integration of MCMC-driven posterior estimation and Differential Privacy marks a substantial advancement in sample efficiency and epistemic uncertainty quantification, several theoretical and empirical limitations necessitate future investigation. 
+
+Firstly, addressing **non-stationarity** remains a formidable challenge. The current DP-SGLD formulation assumes a stationary reward landscape over the training horizon. In highly non-stationary environments, the carefully calibrated hyperparameter posterior may quickly become misaligned, requiring adaptive resampling mechanisms that detect distribution shifts without violating accumulated privacy budgets.
+
+Secondly, the mandated **gradient clipping** essential for bounding the sensitivity in Rényi Differential Privacy inherently perturbs the contractive properties of the Bellman Operator. By artificially truncating the gradients of the temporal difference (TD) error, the clipped Bellman backup may no longer guarantee convergence to the true optimal value function, potentially inducing a persistent optimality gap. Future research must theoretically formalise the conditions under which clipped Bellman operators maintain Banach fixed-point guarantees.
+
+## Conclusion
+
+This research underscores that mathematical rigour is the indispensable foundation for reliable decision intelligence. By bridging Bayesian inference, Markov Chain Monte Carlo, and Differential Privacy, we have demonstrated that it is possible to cultivate policies that are not only highly sample-efficient and robust to epistemic uncertainty but also strictly compliant with stringent data protection mandates. Ultimately, the future of Safe & Private Reinforcement Learning relies on transcending frequentist point estimation in favour of holistic, uncertainty-aware paradigms that natively balance exploratory utility with rigorous privacy preservation.
+
+## Technical Whitepaper Draft
+
+Below is a cohesive, academic-style summary of this project, structured for subsequent integration into a formal LaTeX manuscript.
+
+```latex
+\section{Abstract}
+This paper introduces a novel Variational Actor-Critic (VAC) architecture integrated with Stochastic Gradient Langevin Dynamics (SGLD) to overcome the pervasive issues of Maximum Likelihood Estimation (MLE) collapse and poor epistemic uncertainty quantification in data-scarce reinforcement learning. By facilitating multimodal hyper-posterior exploration through Markov Chain Monte Carlo (MCMC), the framework significantly enhances sample efficiency in high-dimensional continuous control. Furthermore, we natively incorporate Differential Privacy (DP) via the intrinsic Langevin noise, formulating DP-SGLD. Using Rényi Differential Privacy (RDP), we rigorously bound the privacy-utility trade-off, demonstrating robust locomotion capabilities under strict privacy constraints.
+
+\section{Introduction and MLE Collapse}
+In contemporary reinforcement learning, frequentist paradigms heavily rely on MLE. However, in data-scarce regimes, MLE inherently gravitates towards deterministic point estimates that acutely overfit the limited empirical distribution. This MLE collapse manifests as premature policy convergence, depriving the agent of exploratory drive. A Bayesian perspective mitigates this by sustaining a full probability distribution over the model parameters, regularising the objective space against environmental stochasticity.
+
+\section{Variational Actor-Critic and Thompson Sampling}
+To rectify frequentist deficiencies, we cast policy optimisation as an inference problem via the VAC framework, constructing a tractable Evidence Lower Bound (ELBO). We further integrate Thompson Sampling via MCMC techniques, specifically SGLD, to sample directly from the hyperparameter posterior. This capacity isolates epistemic uncertainty, mathematically quantifying model ignorance by evaluating the variance across posterior networks. 
+
+\section{Overcoming Multimodality with MCMC}
+Unlike Variational Inference (VI), which aggressively truncates the hypothesis space with unimodal Gaussian approximations, SGLD natively traverses complex, multi-modal energy landscapes. In high-dimensional tasks such as Humanoid-v4, where unimodal approximations frequently converge to fragile local optima, the SGLD-driven hyper-posterior successfully discovered stable, dynamic locomotion strategies without confining assumptions.
+
+\section{DP-SGLD and the Privacy-Utility Trade-off}
+The standard SGLD parameter update injects scaled Gaussian noise: $\Delta \theta_t = \frac{\eta_t}{2} \nabla \log p(\theta_t \mid \mathcal{D}) + \sqrt{\eta_t} \epsilon_t$. This inherent noise organically functions as a privacy-preserving Gaussian Mechanism. By employing RDP, we tightly bound the $\alpha$-moments of the privacy loss. Empirical sensitivity analysis demonstrates the fundamental tension between the privacy budget ($\epsilon$) and expected return. While strict privacy regimes degrade task utility as mandated noise overwhelms the policy gradient signal, DP-SGLD maintains non-trivial performance under relatively tight constraints.
+
+\section{Discussion and Limitations}
+Addressing non-stationarity remains challenging; the current DP-SGLD assumes a stationary reward landscape, necessitating future adaptive resampling mechanisms. Furthermore, gradient clipping, essential for bounding RDP sensitivity, perturbs the contractive properties of the Bellman Operator. Truncating the gradients of the TD error risks violating Banach fixed-point guarantees, potentially inducing a persistent optimality gap. 
+
+\section{Conclusion}
+By bridging Bayesian inference, MCMC, and Differential Privacy, this framework demonstrates the feasibility of cultivating policies that are sample-efficient, robust to epistemic uncertainty, and compliant with data protection mandates. The future of Safe & Private RL relies on holistic, uncertainty-aware paradigms that intrinsically balance exploratory utility with rigorous privacy preservation.
+```
