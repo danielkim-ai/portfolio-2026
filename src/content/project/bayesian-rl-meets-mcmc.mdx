@@ -66,3 +66,59 @@ The theoretical assertions of the VAC architecture were empirically validated ac
   </div>
 
 </div>
+
+## Phase 3: SGLD Hyper-posterior — Overcoming Multimodality
+
+While Variational Inference (VI) provides a computationally tractable bound on the marginal likelihood, it typically approximates the true posterior with a unimodal Gaussian family. This inherent simplification aggressively truncates the hypothesis space, failing to capture the complex, multi-modal posterior landscapes often found in high-dimensional deep reinforcement learning.
+
+To systematically address this, we deployed **Stochastic Gradient Langevin Dynamics (SGLD)** for hyperparameter posterior estimation. As an MCMC method, SGLD natively traverses the complex energy landscape without confining assumptions about the posterior's shape. By injecting scaled Gaussian noise into the stochastic gradient updates, the agent effectively explores multiple distinct modes of the policy space. 
+
+This multimodal exploration capability proved pivotal in complex, high-dimensional continuous control tasks. Notably, in **Humanoid-v4**, where unimodal approximations frequently converge to fragile local optima (such as the agent prematurely locking its joints to prevent falling), the SGLD-driven hyper-posterior successfully discovered stable, dynamic locomotion strategies.
+
+<div className="diagram-card flex flex-col md:flex-row gap-6 items-center mt-6">
+  <figure className="w-full md:w-1/2 m-0">
+    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase3/phase3_humanoidv4_performance.png" alt="Humanoid Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 7: SGLD successfully navigates the multi-modal reward landscape in Humanoid-v4.</figcaption>
+  </figure>
+  <figure className="w-full md:w-1/2 m-0">
+    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase3/phase3_humanoidv4_posterior.png" alt="Humanoid Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 8: Extensive posterior exploration captured by MCMC in high-dimensional space.</figcaption>
+  </figure>
+</div>
+
+## Phase 4: DP-SGLD — The Privacy-Utility Trade-off
+
+The deployment of reinforcement learning in sensitive domains necessitates rigorous privacy guarantees. We integrated Differential Privacy (DP) directly into the posterior sampling process by leveraging the intrinsic noise of SGLD, formulating **DP-SGLD**.
+
+### The Mathematical Core: Rényi Differential Privacy (RDP)
+
+The standard SGLD parameter update is governed by the Langevin diffusion process, discretised as:
+
+$$
+\Delta \theta_t = \frac{\eta_t}{2} \nabla \log p(\theta_t \mid \mathcal{D}) + \sqrt{\eta_t} \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, I)
+$$
+
+This inherent injection of Gaussian noise $\epsilon_t$, while initially designed for posterior exploration, organically functions as a privacy-preserving Gaussian Mechanism. To tightly bound the privacy leakage over successive training iterations, we employed **Rényi Differential Privacy (RDP)**. RDP bounds the $\alpha$-moments of the privacy loss random variable. The privacy cost for a single gradient update, bounded by a gradient clipping threshold $C$ and noise scale $\sigma$, is mathematically quantified as:
+
+$$
+D_\alpha (P \parallel Q) \approx \frac{\alpha \eta_t C^2}{2\sigma^2}
+$$
+
+By tracking these moments through sequential composition and subsequently converting them back to standard $(\epsilon, \delta)$-DP bounds, we can accurately measure the accumulated privacy budget without loose theoretical approximations.
+
+### Sensitivity and Utility Analysis
+
+Our empirical analysis stringently evaluated the trade-off between the privacy budget ($\epsilon$) and the agent's expected return. As illustrated in the sensitivity analysis, enforcing a strict privacy regime (lower $\epsilon$) inevitably induces a degradation in task utility, as the mandated noise overwhelms the underlying policy gradient signal. Conversely, relaxing the privacy constraints restores near-optimal performance while sacrificing stringent data protection. 
+
+The generated $\epsilon$-sensitivity and privacy loss graphs mathematically substantiate this fundamental tension, demonstrating that DP-SGLD can maintain robust, non-trivial locomotion policies even under relatively tight privacy constraints.
+
+<div className="diagram-card flex flex-col md:flex-row gap-6 items-center mt-6">
+  <figure className="w-full md:w-1/2 m-0">
+    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase4/analysis/phase4_halfcheetahv4_epsilon_sensitivity.png" alt="Epsilon Sensitivity" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 9: Empirical degradation of expected return as a function of the privacy budget $\epsilon$.</figcaption>
+  </figure>
+  <figure className="w-full md:w-1/2 m-0">
+    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase4/analysis/phase4_halfcheetahv4_privacy_budget.png" alt="Privacy Budget" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 10: Accumulated privacy loss tracked via RDP sequential composition.</figcaption>
+  </figure>
+</div>
