@@ -13,13 +13,20 @@ draft: false
 
 ## Phase 1: Diagnostic — The MLE Collapse in Data-Scarce Regimes
 
-In contemporary reinforcement learning, frequentist paradigms heavily rely on Maximum Likelihood Estimation (MLE) to parameterise policy and value networks. However, this methodology reveals profound vulnerabilities in data-scarce or highly stochastic environments. When observational data is sparse, the MLE objective inherently gravitates towards deterministic point estimates that acutely overfit the limited empirical distribution. This phenomenon—often termed 'MLE collapse'—manifests as premature policy convergence and an inability to distinguish between inherent environmental noise (aleatoric uncertainty) and model ignorance (epistemic uncertainty).
+In contemporary reinforcement learning, frequentist paradigms heavily rely on Maximum Likelihood Estimation (MLE) to parameterise policy and value networks. However, this methodology reveals profound vulnerabilities in data-scarce or highly stochastic environments. When observational data is sparse, the MLE objective inherently gravitates towards deterministic point estimates that acutely overfit the limited empirical distribution. This phenomenon — often termed 'MLE collapse' — manifests as premature policy convergence and an inability to distinguish between inherent environmental noise (aleatoric uncertainty) and model ignorance (epistemic uncertainty).
 
 Statistically, the frequentist approach assumes an infinite data horizon where the empirical Fisher Information Matrix converges to the true Hessian of the loss landscape. In finite-sample regimes, this assumption collapses. Without a principled prior to regularise the objective space, the agent is deprived of the exploratory drive necessary to uncover optimal trajectories, thereby cementing sub-optimal behaviour. A Bayesian perspective, conversely, sustains a full probability distribution over the model parameters, mitigating this catastrophic collapse through rigorous posterior regularisation.
 
+<div className="diagram-card flex flex-col items-center mt-6">
+  <figure className="w-full m-0">
+    <img src="/results/plots/phase1/phase1_halfcheetahv4_diagnostic.png" alt="Phase 1 MLE Diagnostic — HalfCheetah-v4" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 1: MLE collapse diagnostic in HalfCheetah-v4. Note the premature convergence and high variance indicating frequentist instability under sparse data.</figcaption>
+  </figure>
+</div>
+
 ## Phase 2: Performance — Variational Actor-Critic and Thompson Sampling
 
-To systematically rectify the deficiencies of frequentist point estimation, we introduce the **Variational Actor-Critic (VAC)** framework. By casting policy optimisation as an inference problem, VAC constructs a tractable Evidence Lower Bound (ELBO) that balances reward maximisation with KL-divergence regularisation against a prior. 
+To systematically rectify the deficiencies of frequentist point estimation, we introduce the **Variational Actor-Critic (VAC)** framework. By casting policy optimisation as an inference problem, VAC constructs a tractable Evidence Lower Bound (ELBO) that balances reward maximisation with KL-divergence regularisation against a prior.
 
 Furthermore, we integrate **Thompson Sampling** via Markov Chain Monte Carlo (MCMC) techniques. This integration facilitates the sampling of parameters directly from the hyperparameter posterior. The defining triumph of this architecture lies in its capacity to rigorously isolate **Epistemic Uncertainty**. By evaluating the variance across the MCMC-sampled posterior networks, the agent mathematically quantifies its own ignorance. This enables deeply exploratory behaviour in unfamiliar state spaces whilst exploiting known high-reward trajectories safely.
 
@@ -28,54 +35,52 @@ Furthermore, we integrate **Thompson Sampling** via Markov Chain Monte Carlo (MC
 The theoretical assertions of the VAC architecture were empirically validated across multiple continuous control suites in MuJoCo. The following visualisations illustrate the comparative performance and the posterior estimation fidelity of the proposed Bayesian framework.
 
 <div className="diagram-card flex flex-col gap-8 mt-8">
-  
-  {/* HalfCheetah-v4 */}
+
   <div className="flex flex-col md:flex-row gap-6 items-center">
     <figure className="w-full md:w-1/2 m-0">
       <img src="/results/plots/phase2/phase2_halfcheetahv4_performance.png" alt="HalfCheetah Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 1: Performance trajectory in HalfCheetah-v4.</figcaption>
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 2: Performance trajectory in HalfCheetah-v4.</figcaption>
     </figure>
     <figure className="w-full md:w-1/2 m-0">
       <img src="/results/plots/phase2/phase2_halfcheetahv4_posterior.png" alt="HalfCheetah Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 2: Epistemic uncertainty estimation in HalfCheetah-v4.</figcaption>
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 3: Epistemic uncertainty (posterior) in HalfCheetah-v4.</figcaption>
     </figure>
   </div>
 
-  {/* Ant-v4 */}
   <div className="flex flex-col md:flex-row gap-6 items-center border-t border-slate-200 dark:border-slate-700 pt-8">
     <figure className="w-full md:w-1/2 m-0">
       <img src="/results/plots/phase2/phase2_antv4_performance.png" alt="Ant Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 3: Performance trajectory in Ant-v4.</figcaption>
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 4: Performance trajectory in Ant-v4.</figcaption>
     </figure>
     <figure className="w-full md:w-1/2 m-0">
       <img src="/results/plots/phase2/phase2_antv4_posterior.png" alt="Ant Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 4: Epistemic uncertainty estimation in Ant-v4.</figcaption>
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 5: Epistemic uncertainty (posterior) in Ant-v4.</figcaption>
     </figure>
   </div>
 
-  {/* Hopper-v4 */}
   <div className="flex flex-col md:flex-row gap-6 items-center border-t border-slate-200 dark:border-slate-700 pt-8">
     <figure className="w-full md:w-1/2 m-0">
       <img src="/results/plots/phase2/phase2_hopperv4_performance.png" alt="Hopper Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 5: Performance trajectory in Hopper-v4.</figcaption>
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 6: Performance trajectory in Hopper-v4.</figcaption>
     </figure>
     <figure className="w-full md:w-1/2 m-0">
       <img src="/results/plots/phase2/phase2_hopperv4_posterior.png" alt="Hopper Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 6: Epistemic uncertainty estimation in Hopper-v4.</figcaption>
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 7: Epistemic uncertainty (posterior) in Hopper-v4.</figcaption>
     </figure>
   </div>
+
 </div>
 
 ### Stability & Regret Analysis
 
-In data-scarce regimes, the exploration-exploitation trade-off is often managed inadequately by frequentist $\epsilon$-greedy strategies, which arbitrarily inject noise irrespective of the agent's actual epistemic uncertainty. Statistically, this unguided exploration results in a linear cumulative regret bound of $O(T)$. In stark contrast, our Bayesian Thompson Sampling approach dynamically scales exploration based on the evaluated posterior variance. By exclusively exploring highly uncertain state-action pairs, the agent achieves a theoretically rigorous, sub-linear regret bound of $\tilde{O}(\sqrt{dT})$, where $d$ is the effective dimensionality of the hypothesis space. 
+In data-scarce regimes, the exploration-exploitation trade-off is often managed inadequately by frequentist $\epsilon$-greedy strategies, which arbitrarily inject noise irrespective of the agent's actual epistemic uncertainty. Statistically, this unguided exploration results in a linear cumulative regret bound of $O(T)$. In stark contrast, our Bayesian Thompson Sampling approach dynamically scales exploration based on the evaluated posterior variance. By exclusively exploring highly uncertain state-action pairs, the agent achieves a theoretically rigorous, sub-linear regret bound of $\tilde{O}(\sqrt{dT})$, where $d$ is the effective dimensionality of the hypothesis space.
 
-The empirical validation of this theoretical advantage is depicted below, clearly demonstrating the structural stabilisation and bounded regret convergence achieved by the Bayesian framework.
+The empirical validation of this theoretical advantage is depicted below, clearly demonstrating the structural stabilisation and bounded regret convergence achieved by the Bayesian framework versus the Variational Inference baseline.
 
 <div className="diagram-card flex flex-col items-center mt-6">
   <figure className="w-full md:w-3/4 m-0">
-    <img src="/results/plots/phase2/image_9b8d92.png" alt="Regret Analysis" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 7: Cumulative regret comparison: $\epsilon$-greedy vs Bayesian Thompson Sampling.</figcaption>
+    <img src="/results/plots/phase2/regret_comparison.png" alt="MCMC vs VI Trade-off and Regret Analysis" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 8: Cumulative regret and MCMC vs VI trade-off: Bayesian Thompson Sampling achieves sub-linear $\tilde{O}(\sqrt{dT})$ regret against the frequentist $O(T)$ baseline.</figcaption>
   </figure>
 </div>
 
@@ -83,26 +88,41 @@ The empirical validation of this theoretical advantage is depicted below, clearl
 
 While Variational Inference (VI) provides a computationally tractable bound on the marginal likelihood, it typically approximates the true posterior with a unimodal Gaussian family. This inherent simplification aggressively truncates the hypothesis space, failing to capture the complex, multi-modal posterior landscapes often found in high-dimensional deep reinforcement learning.
 
-To systematically address this, we deployed **Stochastic Gradient Langevin Dynamics (SGLD)** for hyperparameter posterior estimation. As an MCMC method, SGLD natively traverses the complex energy landscape without confining assumptions about the posterior's shape. By injecting scaled Gaussian noise into the stochastic gradient updates, the agent effectively explores multiple distinct modes of the policy space. 
+To systematically address this, we deployed **Stochastic Gradient Langevin Dynamics (SGLD)** for hyperparameter posterior estimation. As an MCMC method, SGLD natively traverses the complex energy landscape without confining assumptions about the posterior's shape. By injecting scaled Gaussian noise into the stochastic gradient updates, the agent effectively explores multiple distinct modes of the policy space.
 
-This multimodal exploration capability proved pivotal in complex, high-dimensional continuous control tasks. Notably, in **Humanoid-v4**, where unimodal approximations frequently converge to fragile local optima (such as the agent prematurely locking its joints to prevent falling), the SGLD-driven hyper-posterior successfully discovered stable, dynamic locomotion strategies.
+This multimodal exploration capability proved pivotal in complex, high-dimensional continuous control tasks. Notably, in **Humanoid-v4**, where unimodal approximations frequently converge to fragile local optima, the SGLD-driven hyper-posterior successfully discovered stable, dynamic locomotion strategies.
 
-<div className="diagram-card flex flex-col md:flex-row gap-6 items-center mt-6">
-  <figure className="w-full md:w-1/2 m-0">
-    <img src="/results/plots/phase3/phase3_humanoidv4_performance.png" alt="Humanoid Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 8: SGLD successfully navigates the multi-modal reward landscape in Humanoid-v4.</figcaption>
-  </figure>
-  <figure className="w-full md:w-1/2 m-0">
-    <img src="/results/plots/phase3/phase3_humanoidv4_posterior.png" alt="Humanoid Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 9: Extensive posterior exploration captured by MCMC in high-dimensional space.</figcaption>
-  </figure>
+<div className="diagram-card flex flex-col gap-8 mt-8">
+
+  <div className="flex flex-col md:flex-row gap-6 items-center">
+    <figure className="w-full md:w-1/2 m-0">
+      <img src="/results/plots/phase3/phase3_humanoidv4_performance.png" alt="Humanoid Phase 3 Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 9: SGLD successfully navigates the multi-modal reward landscape in Humanoid-v4.</figcaption>
+    </figure>
+    <figure className="w-full md:w-1/2 m-0">
+      <img src="/results/plots/phase3/phase3_humanoidv4_posterior.png" alt="Humanoid Phase 3 Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 10: Extensive posterior exploration captured by SGLD-MCMC in high-dimensional Humanoid-v4 space.</figcaption>
+    </figure>
+  </div>
+
+  <div className="flex flex-col md:flex-row gap-6 items-center border-t border-slate-200 dark:border-slate-700 pt-8">
+    <figure className="w-full md:w-1/2 m-0">
+      <img src="/results/plots/phase3/phase3_halfcheetahv4_performance.png" alt="HalfCheetah Phase 3 Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 11: SGLD hyper-posterior performance in HalfCheetah-v4.</figcaption>
+    </figure>
+    <figure className="w-full md:w-1/2 m-0">
+      <img src="/results/plots/phase3/phase3_antv4_performance.png" alt="Ant Phase 3 Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 12: SGLD hyper-posterior performance in Ant-v4.</figcaption>
+    </figure>
+  </div>
+
 </div>
 
 ## Phase 4: DP-SGLD — The Privacy-Utility Trade-off
 
 The deployment of reinforcement learning in sensitive domains necessitates rigorous privacy guarantees. We integrated Differential Privacy (DP) directly into the posterior sampling process by leveraging the intrinsic noise of SGLD, formulating **DP-SGLD**.
 
-### The Mathematical Core: Rényi Differential Privacy (RDP)
+### The Mathematical Core: Renyi Differential Privacy (RDP)
 
 The standard SGLD parameter update is governed by the Langevin diffusion process, discretised as:
 
@@ -110,38 +130,47 @@ $$
 \Delta \theta_t = \frac{\eta_t}{2} \nabla \log p(\theta_t \mid \mathcal{D}) + \sqrt{\eta_t} \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, I)
 $$
 
-This inherent injection of Gaussian noise $\epsilon_t$, while initially designed for posterior exploration, organically functions as a privacy-preserving Gaussian Mechanism. To tightly bound the privacy leakage over successive training iterations, we employed **Rényi Differential Privacy (RDP)**. RDP bounds the $\alpha$-moments of the privacy loss random variable. The privacy cost for a single gradient update, bounded by a gradient clipping threshold $C$ and noise scale $\sigma$, is mathematically quantified as:
+This inherent injection of Gaussian noise $\epsilon_t$, while initially designed for posterior exploration, organically functions as a privacy-preserving Gaussian Mechanism. To tightly bound the privacy leakage over successive training iterations, we employed **Renyi Differential Privacy (RDP)**. RDP bounds the $\alpha$-moments of the privacy loss random variable. The privacy cost for a single gradient update, bounded by a gradient clipping threshold $C$ and noise scale $\sigma$, is quantified as:
 
 $$
 D_\alpha (P \parallel Q) \approx \frac{\alpha \eta_t C^2}{2\sigma^2}
 $$
 
-By tracking these moments through sequential composition and subsequently converting them back to standard $(\epsilon, \delta)$-DP bounds, we can accurately measure the accumulated privacy budget without loose theoretical approximations.
+By tracking these moments through sequential composition and subsequently converting them back to standard $(\epsilon, \delta)$-DP bounds, we accurately measure the accumulated privacy budget without loose theoretical approximations.
 
 ### Sensitivity and Utility Analysis
 
-Our empirical analysis stringently evaluated the trade-off between the privacy budget ($\epsilon$) and the agent's expected return. As illustrated in the sensitivity analysis, enforcing a strict privacy regime (lower $\epsilon$) inevitably induces a degradation in task utility, as the mandated noise overwhelms the underlying policy gradient signal. Conversely, relaxing the privacy constraints restores near-optimal performance while sacrificing stringent data protection. 
-
-The generated $\epsilon$-sensitivity and privacy loss graphs mathematically substantiate this fundamental tension, demonstrating that DP-SGLD can maintain robust, non-trivial locomotion policies even under relatively tight privacy constraints.
+Our empirical analysis stringently evaluated the trade-off between the privacy budget ($\epsilon$) and the agent's expected return. Enforcing a strict privacy regime (lower $\epsilon$) inevitably induces a degradation in task utility, as the mandated noise overwhelms the policy gradient signal. Conversely, relaxing the privacy constraints restores near-optimal performance while sacrificing stringent data protection.
 
 <div className="diagram-card flex flex-col md:flex-row gap-6 items-center mt-6">
   <figure className="w-full md:w-1/2 m-0">
-    <img src="/results/plots/phase4/analysis/phase4_halfcheetahv4_epsilon_sensitivity.png" alt="Epsilon Sensitivity" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 10: Empirical degradation of expected return as a function of the privacy budget $\epsilon$.</figcaption>
+    <img src="/results/plots/phase4/analysis/phase4_halfcheetahv4_epsilon_sensitivity.png" alt="Epsilon Sensitivity Analysis" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 13: Empirical degradation of expected return as a function of the privacy budget $\epsilon$.</figcaption>
   </figure>
   <figure className="w-full md:w-1/2 m-0">
-    <img src="/results/plots/phase4/analysis/phase4_halfcheetahv4_privacy_budget.png" alt="Privacy Budget" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 11: Accumulated privacy loss tracked via RDP sequential composition.</figcaption>
+    <img src="/results/plots/phase4/analysis/phase4_halfcheetahv4_privacy_budget.png" alt="Privacy Budget Accumulation" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 14: Accumulated privacy loss tracked via RDP sequential composition.</figcaption>
+  </figure>
+</div>
+
+<div className="diagram-card flex flex-col md:flex-row gap-6 items-center mt-6">
+  <figure className="w-full md:w-1/2 m-0">
+    <img src="/results/plots/phase4/phase4_halfcheetahv4_performance.png" alt="DP-SGLD HalfCheetah Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 15: DP-SGLD performance in HalfCheetah-v4 under privacy constraints.</figcaption>
+  </figure>
+  <figure className="w-full md:w-1/2 m-0">
+    <img src="/results/plots/phase4/phase4_humanoidv4_performance.png" alt="DP-SGLD Humanoid Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 16: DP-SGLD performance in Humanoid-v4 under privacy constraints.</figcaption>
   </figure>
 </div>
 
 ## Discussion: Limitations and Future Directions
 
-While the integration of MCMC-driven posterior estimation and Differential Privacy marks a substantial advancement in sample efficiency and epistemic uncertainty quantification, several theoretical and empirical limitations necessitate future investigation. 
+While the integration of MCMC-driven posterior estimation and Differential Privacy marks a substantial advancement in sample efficiency and epistemic uncertainty quantification, several theoretical and empirical limitations necessitate future investigation.
 
 Firstly, addressing **non-stationarity** remains a formidable challenge. The current DP-SGLD formulation assumes a stationary reward landscape over the training horizon. In highly non-stationary environments, the carefully calibrated hyperparameter posterior may quickly become misaligned, requiring adaptive resampling mechanisms that detect distribution shifts without violating accumulated privacy budgets.
 
-Secondly, the mandated **gradient clipping** essential for bounding the sensitivity in Rényi Differential Privacy inherently perturbs the contractive properties of the Bellman Operator. By artificially truncating the gradients of the temporal difference (TD) error, the clipped Bellman backup may no longer guarantee convergence to the true optimal value function, potentially inducing a persistent optimality gap. Future research must theoretically formalise the conditions under which clipped Bellman operators maintain Banach fixed-point guarantees.
+Secondly, the mandated **gradient clipping** essential for bounding the sensitivity in Renyi Differential Privacy inherently perturbs the contractive properties of the Bellman Operator. By artificially truncating the gradients of the temporal difference (TD) error, the clipped Bellman backup may no longer guarantee convergence to the true optimal value function, potentially inducing a persistent optimality gap. Future research must theoretically formalise the conditions under which clipped Bellman operators maintain Banach fixed-point guarantees.
 
 ## Conclusion
 
@@ -149,7 +178,7 @@ This research underscores that mathematical rigour is the indispensable foundati
 
 ## Download Technical Brief (LaTeX)
 
-Below is a cohesive, academic-style summary of this project, provided as an Overleaf-ready `main.tex` source code. It incorporates the standard IEEE 2-column format for immediate compilation.
+Below is an Overleaf-ready `main.tex` source in IEEE 2-column format. Copy and paste directly into Overleaf to compile.
 
 ```latex
 \documentclass[conference]{IEEEtran}
@@ -162,39 +191,77 @@ Below is a cohesive, academic-style summary of this project, provided as an Over
 
 \begin{document}
 
-\title{Bayesian RL Meets MCMC: Sample Efficiency, Hyperparameter Posterior Estimation \& Privacy-Preserving Policy Optimisation}
+\title{Bayesian RL Meets MCMC: Sample Efficiency, Hyperparameter
+Posterior Estimation \& Privacy-Preserving Policy Optimisation}
 
 \author{
-\IEEEauthorblockN{Daniel Kim}
-\IEEEauthorblockA{\textit{Department of Computer Science} \\
-daniel.kim@example.com}
+  \IEEEauthorblockN{Daniel Kim}
+  \IEEEauthorblockA{\textit{Department of Computer Science} \\
+  daniel.kim@example.com}
 }
 
 \maketitle
 
 \begin{abstract}
-This paper introduces a novel Variational Actor-Critic (VAC) architecture integrated with Stochastic Gradient Langevin Dynamics (SGLD) to overcome the pervasive issues of Maximum Likelihood Estimation (MLE) collapse and poor epistemic uncertainty quantification in data-scarce reinforcement learning. By facilitating multimodal hyper-posterior exploration through Markov Chain Monte Carlo (MCMC), the framework significantly enhances sample efficiency in high-dimensional continuous control. Furthermore, we natively incorporate Differential Privacy (DP) via the intrinsic Langevin noise, formulating DP-SGLD. Using R\'enyi Differential Privacy (RDP), we rigorously bound the privacy-utility trade-off, demonstrating robust locomotion capabilities under strict privacy constraints.
+This paper introduces a novel Variational Actor-Critic (VAC)
+architecture integrated with Stochastic Gradient Langevin Dynamics
+(SGLD) to overcome MLE collapse and poor epistemic uncertainty
+quantification in data-scarce reinforcement learning. By facilitating
+multimodal hyper-posterior exploration via MCMC, the framework
+significantly enhances sample efficiency. We further incorporate
+Differential Privacy via intrinsic Langevin noise (DP-SGLD),
+bounding the privacy-utility trade-off using Renyi Differential
+Privacy (RDP), demonstrating robust locomotion under strict constraints.
 \end{abstract}
 
 \section{Introduction and MLE Collapse}
-In contemporary reinforcement learning, frequentist paradigms heavily rely on MLE. However, in data-scarce regimes, MLE inherently gravitates towards deterministic point estimates that acutely overfit the limited empirical distribution. This MLE collapse manifests as premature policy convergence, depriving the agent of exploratory drive. A Bayesian perspective mitigates this by sustaining a full probability distribution over the model parameters, regularising the objective space against environmental stochasticity.
+In data-scarce regimes, MLE gravitates towards deterministic point
+estimates that overfit the limited empirical distribution. This MLE
+collapse manifests as premature policy convergence, depriving the
+agent of exploratory drive. A Bayesian perspective mitigates this by
+sustaining a full probability distribution over model parameters,
+regularising the objective against environmental stochasticity.
 
 \section{Variational Actor-Critic and Thompson Sampling}
-To rectify frequentist deficiencies, we cast policy optimisation as an inference problem via the VAC framework, constructing a tractable Evidence Lower Bound (ELBO). We further integrate Thompson Sampling via MCMC techniques, specifically SGLD, to sample directly from the hyperparameter posterior. This capacity isolates epistemic uncertainty, mathematically quantifying model ignorance by evaluating the variance across posterior networks. 
+We cast policy optimisation as an inference problem via the VAC
+framework, constructing a tractable ELBO balancing reward
+maximisation with KL-divergence regularisation. We integrate Thompson
+Sampling via SGLD to sample directly from the hyperparameter
+posterior, isolating epistemic uncertainty by evaluating variance
+across posterior networks.
 
-\section{Stability \& Regret Analysis}
-In data-scarce regimes, the exploration-exploitation trade-off is poorly managed by $\epsilon$-greedy strategies, which inject noise irrespective of epistemic uncertainty, yielding a linear regret bound of $O(T)$. In contrast, our Bayesian Thompson Sampling approach scales exploration based on posterior variance, achieving a sub-linear regret bound of $\tilde{O}(\sqrt{dT})$, where $d$ is the effective dimensionality.
+\section{Stability and Regret Analysis}
+Frequentist $\epsilon$-greedy strategies yield a linear cumulative
+regret bound of $O(T)$. Our Bayesian Thompson Sampling approach,
+scaling exploration based on posterior variance, achieves a
+sub-linear bound of $\tilde{O}(\sqrt{dT})$, where $d$ is the
+effective dimensionality of the hypothesis space.
 
-\section{Overcoming Multimodality with MCMC}
-Unlike Variational Inference (VI), which aggressively truncates the hypothesis space with unimodal Gaussian approximations, SGLD natively traverses complex, multi-modal energy landscapes. In high-dimensional tasks such as Humanoid-v4, where unimodal approximations frequently converge to fragile local optima, the SGLD-driven hyper-posterior successfully discovered stable, dynamic locomotion strategies without confining assumptions.
+\section{Overcoming Multimodality with SGLD-MCMC}
+Unlike Variational Inference, which approximates the posterior with
+unimodal Gaussians, SGLD natively traverses multi-modal energy
+landscapes. In Humanoid-v4, the SGLD-driven hyper-posterior
+discovered stable locomotion strategies that unimodal approximations
+routinely fail to find.
 
 \section{DP-SGLD and the Privacy-Utility Trade-off}
-The standard SGLD parameter update injects scaled Gaussian noise: $\Delta \theta_t = \frac{\eta_t}{2} \nabla \log p(\theta_t \mid \mathcal{D}) + \sqrt{\eta_t} \epsilon_t$. This inherent noise organically functions as a privacy-preserving Gaussian Mechanism. By employing RDP, we tightly bound the $\alpha$-moments of the privacy loss. Empirical sensitivity analysis demonstrates the fundamental tension between the privacy budget ($\epsilon$) and expected return. While strict privacy regimes degrade task utility as mandated noise overwhelms the policy gradient signal, DP-SGLD maintains non-trivial performance under relatively tight constraints.
+The SGLD update injects scaled Gaussian noise:
+$\Delta \theta_t = \frac{\eta_t}{2} \nabla \log p(\theta_t \mid
+\mathcal{D}) + \sqrt{\eta_t}\,\epsilon_t$. This noise functions as a
+privacy-preserving Gaussian Mechanism. Using RDP, we bound the
+$\alpha$-moments of the privacy loss:
+$D_\alpha(P \parallel Q) \approx \frac{\alpha \eta_t C^2}{2\sigma^2}$.
+Sensitivity analysis confirms DP-SGLD maintains non-trivial
+performance under tight privacy budgets.
 
 \section{Discussion and Conclusion}
-Addressing non-stationarity remains challenging; the current DP-SGLD assumes a stationary reward landscape, necessitating future adaptive resampling mechanisms. Furthermore, gradient clipping, essential for bounding RDP sensitivity, perturbs the contractive properties of the Bellman Operator. Truncating the gradients of the TD error risks violating Banach fixed-point guarantees, potentially inducing a persistent optimality gap. 
-
-By bridging Bayesian inference, MCMC, and Differential Privacy, this framework demonstrates the feasibility of cultivating policies that are sample-efficient, robust to epistemic uncertainty, and compliant with data protection mandates. The future of Safe \& Private RL relies on holistic, uncertainty-aware paradigms that intrinsically balance exploratory utility with rigorous privacy preservation.
+Non-stationarity and the perturbative effect of gradient clipping on
+Bellman operator contractivity remain open challenges. Nevertheless,
+by unifying Bayesian inference, MCMC, and Differential Privacy, this
+framework demonstrates the feasibility of policies that are
+sample-efficient, uncertainty-aware, and provably private. The future
+of Safe \& Private RL depends on holistic paradigms that intrinsically
+balance exploratory utility with rigorous privacy preservation.
 
 \end{document}
 ```
