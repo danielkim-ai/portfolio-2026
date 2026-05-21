@@ -61,10 +61,22 @@ The theoretical assertions of the VAC architecture were empirically validated ac
     </figure>
     <figure className="w-full md:w-1/2 m-0">
       <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase2/phase2_hopperv4_posterior.png" alt="Hopper Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
-      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 6: Epistemic uncertainty estimation in Hopper-v4.</figcaption>
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 6: Epistemic uncertainty estimation in Hopper-v4.</figcaption>
     </figure>
   </div>
+</div>
 
+### Stability & Regret Analysis
+
+In data-scarce regimes, the exploration-exploitation trade-off is often managed inadequately by frequentist $\epsilon$-greedy strategies, which arbitrarily inject noise irrespective of the agent's actual epistemic uncertainty. Statistically, this unguided exploration results in a linear cumulative regret bound of $O(T)$. In stark contrast, our Bayesian Thompson Sampling approach dynamically scales exploration based on the evaluated posterior variance. By exclusively exploring highly uncertain state-action pairs, the agent achieves a theoretically rigorous, sub-linear regret bound of $\tilde{O}(\sqrt{dT})$, where $d$ is the effective dimensionality of the hypothesis space. 
+
+The empirical validation of this theoretical advantage is depicted below, clearly demonstrating the structural stabilisation and bounded regret convergence achieved by the Bayesian framework.
+
+<div className="diagram-card flex flex-col items-center mt-6">
+  <figure className="w-full md:w-3/4 m-0">
+    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase2/image_9b8d92.png" alt="Regret Analysis" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 7: Cumulative regret comparison: $\epsilon$-greedy vs Bayesian Thompson Sampling.</figcaption>
+  </figure>
 </div>
 
 ## Phase 3: SGLD Hyper-posterior — Overcoming Multimodality
@@ -135,13 +147,34 @@ Secondly, the mandated **gradient clipping** essential for bounding the sensitiv
 
 This research underscores that mathematical rigour is the indispensable foundation for reliable decision intelligence. By bridging Bayesian inference, Markov Chain Monte Carlo, and Differential Privacy, we have demonstrated that it is possible to cultivate policies that are not only highly sample-efficient and robust to epistemic uncertainty but also strictly compliant with stringent data protection mandates. Ultimately, the future of Safe & Private Reinforcement Learning relies on transcending frequentist point estimation in favour of holistic, uncertainty-aware paradigms that natively balance exploratory utility with rigorous privacy preservation.
 
-## Technical Whitepaper Draft
+## Download Technical Brief (LaTeX)
 
-Below is a cohesive, academic-style summary of this project, structured for subsequent integration into a formal LaTeX manuscript.
+Below is a cohesive, academic-style summary of this project, provided as an Overleaf-ready `main.tex` source code. It incorporates the standard IEEE 2-column format for immediate compilation.
 
 ```latex
-\section{Abstract}
-This paper introduces a novel Variational Actor-Critic (VAC) architecture integrated with Stochastic Gradient Langevin Dynamics (SGLD) to overcome the pervasive issues of Maximum Likelihood Estimation (MLE) collapse and poor epistemic uncertainty quantification in data-scarce reinforcement learning. By facilitating multimodal hyper-posterior exploration through Markov Chain Monte Carlo (MCMC), the framework significantly enhances sample efficiency in high-dimensional continuous control. Furthermore, we natively incorporate Differential Privacy (DP) via the intrinsic Langevin noise, formulating DP-SGLD. Using Rényi Differential Privacy (RDP), we rigorously bound the privacy-utility trade-off, demonstrating robust locomotion capabilities under strict privacy constraints.
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\begin{document}
+
+\title{Bayesian RL Meets MCMC: Sample Efficiency, Hyperparameter Posterior Estimation \& Privacy-Preserving Policy Optimisation}
+
+\author{
+\IEEEauthorblockN{Daniel Kim}
+\IEEEauthorblockA{\textit{Department of Computer Science} \\
+daniel.kim@example.com}
+}
+
+\maketitle
+
+\begin{abstract}
+This paper introduces a novel Variational Actor-Critic (VAC) architecture integrated with Stochastic Gradient Langevin Dynamics (SGLD) to overcome the pervasive issues of Maximum Likelihood Estimation (MLE) collapse and poor epistemic uncertainty quantification in data-scarce reinforcement learning. By facilitating multimodal hyper-posterior exploration through Markov Chain Monte Carlo (MCMC), the framework significantly enhances sample efficiency in high-dimensional continuous control. Furthermore, we natively incorporate Differential Privacy (DP) via the intrinsic Langevin noise, formulating DP-SGLD. Using R\'enyi Differential Privacy (RDP), we rigorously bound the privacy-utility trade-off, demonstrating robust locomotion capabilities under strict privacy constraints.
+\end{abstract}
 
 \section{Introduction and MLE Collapse}
 In contemporary reinforcement learning, frequentist paradigms heavily rely on MLE. However, in data-scarce regimes, MLE inherently gravitates towards deterministic point estimates that acutely overfit the limited empirical distribution. This MLE collapse manifests as premature policy convergence, depriving the agent of exploratory drive. A Bayesian perspective mitigates this by sustaining a full probability distribution over the model parameters, regularising the objective space against environmental stochasticity.
@@ -149,15 +182,19 @@ In contemporary reinforcement learning, frequentist paradigms heavily rely on ML
 \section{Variational Actor-Critic and Thompson Sampling}
 To rectify frequentist deficiencies, we cast policy optimisation as an inference problem via the VAC framework, constructing a tractable Evidence Lower Bound (ELBO). We further integrate Thompson Sampling via MCMC techniques, specifically SGLD, to sample directly from the hyperparameter posterior. This capacity isolates epistemic uncertainty, mathematically quantifying model ignorance by evaluating the variance across posterior networks. 
 
+\section{Stability \& Regret Analysis}
+In data-scarce regimes, the exploration-exploitation trade-off is poorly managed by $\epsilon$-greedy strategies, which inject noise irrespective of epistemic uncertainty, yielding a linear regret bound of $O(T)$. In contrast, our Bayesian Thompson Sampling approach scales exploration based on posterior variance, achieving a sub-linear regret bound of $\tilde{O}(\sqrt{dT})$, where $d$ is the effective dimensionality.
+
 \section{Overcoming Multimodality with MCMC}
 Unlike Variational Inference (VI), which aggressively truncates the hypothesis space with unimodal Gaussian approximations, SGLD natively traverses complex, multi-modal energy landscapes. In high-dimensional tasks such as Humanoid-v4, where unimodal approximations frequently converge to fragile local optima, the SGLD-driven hyper-posterior successfully discovered stable, dynamic locomotion strategies without confining assumptions.
 
 \section{DP-SGLD and the Privacy-Utility Trade-off}
 The standard SGLD parameter update injects scaled Gaussian noise: $\Delta \theta_t = \frac{\eta_t}{2} \nabla \log p(\theta_t \mid \mathcal{D}) + \sqrt{\eta_t} \epsilon_t$. This inherent noise organically functions as a privacy-preserving Gaussian Mechanism. By employing RDP, we tightly bound the $\alpha$-moments of the privacy loss. Empirical sensitivity analysis demonstrates the fundamental tension between the privacy budget ($\epsilon$) and expected return. While strict privacy regimes degrade task utility as mandated noise overwhelms the policy gradient signal, DP-SGLD maintains non-trivial performance under relatively tight constraints.
 
-\section{Discussion and Limitations}
+\section{Discussion and Conclusion}
 Addressing non-stationarity remains challenging; the current DP-SGLD assumes a stationary reward landscape, necessitating future adaptive resampling mechanisms. Furthermore, gradient clipping, essential for bounding RDP sensitivity, perturbs the contractive properties of the Bellman Operator. Truncating the gradients of the TD error risks violating Banach fixed-point guarantees, potentially inducing a persistent optimality gap. 
 
-\section{Conclusion}
-By bridging Bayesian inference, MCMC, and Differential Privacy, this framework demonstrates the feasibility of cultivating policies that are sample-efficient, robust to epistemic uncertainty, and compliant with data protection mandates. The future of Safe & Private RL relies on holistic, uncertainty-aware paradigms that intrinsically balance exploratory utility with rigorous privacy preservation.
+By bridging Bayesian inference, MCMC, and Differential Privacy, this framework demonstrates the feasibility of cultivating policies that are sample-efficient, robust to epistemic uncertainty, and compliant with data protection mandates. The future of Safe \& Private RL relies on holistic, uncertainty-aware paradigms that intrinsically balance exploratory utility with rigorous privacy preservation.
+
+\end{document}
 ```
