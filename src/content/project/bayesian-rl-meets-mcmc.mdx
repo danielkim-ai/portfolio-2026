@@ -1,5 +1,5 @@
 ---
-title: "Bayesian RL Meets MCMC — Sample Efficiency, Hyperparameter Posterior Estimation & Privacy-Preserving Policy Optimisation"
+title: "Bayesian RL Meets MCMC ??Sample Efficiency, Hyperparameter Posterior Estimation & Privacy-Preserving Policy Optimisation"
 date: 2026-05-22
 tags: ["bayesian-rl", "mcmc", "variational-inference", "thompson-sampling"]
 problem: "Frequentist RL algorithms suffer from MLE collapse and poor epistemic uncertainty quantification in data-scarce regimes."
@@ -11,13 +11,13 @@ category: "Reinforcement Learning"
 draft: false
 ---
 
-## Phase 1: Diagnostic — The MLE Collapse in Data-Scarce Regimes
+## Phase 1: Diagnostic ??The MLE Collapse in Data-Scarce Regimes
 
-In contemporary reinforcement learning, frequentist paradigms heavily rely on Maximum Likelihood Estimation (MLE) to parameterise policy and value networks. However, this methodology reveals profound vulnerabilities in data-scarce or highly stochastic environments. When observational data is sparse, the MLE objective inherently gravitates towards deterministic point estimates that acutely overfit the limited empirical distribution. This phenomenon—often termed 'MLE collapse'—manifests as premature policy convergence and an inability to distinguish between inherent environmental noise (aleatoric uncertainty) and model ignorance (epistemic uncertainty).
+In contemporary reinforcement learning, frequentist paradigms heavily rely on Maximum Likelihood Estimation (MLE) to parameterise policy and value networks. However, this methodology reveals profound vulnerabilities in data-scarce or highly stochastic environments. When observational data is sparse, the MLE objective inherently gravitates towards deterministic point estimates that acutely overfit the limited empirical distribution. This phenomenon?�often termed 'MLE collapse'?�manifests as premature policy convergence and an inability to distinguish between inherent environmental noise (aleatoric uncertainty) and model ignorance (epistemic uncertainty).
 
 Statistically, the frequentist approach assumes an infinite data horizon where the empirical Fisher Information Matrix converges to the true Hessian of the loss landscape. In finite-sample regimes, this assumption collapses. Without a principled prior to regularise the objective space, the agent is deprived of the exploratory drive necessary to uncover optimal trajectories, thereby cementing sub-optimal behaviour. A Bayesian perspective, conversely, sustains a full probability distribution over the model parameters, mitigating this catastrophic collapse through rigorous posterior regularisation.
 
-## Phase 2: Performance — Variational Actor-Critic and Thompson Sampling
+## Phase 2: Performance ??Variational Actor-Critic and Thompson Sampling
 
 To systematically rectify the deficiencies of frequentist point estimation, we introduce the **Variational Actor-Critic (VAC)** framework. By casting policy optimisation as an inference problem, VAC constructs a tractable Evidence Lower Bound (ELBO) that balances reward maximisation with KL-divergence regularisation against a prior. 
 
@@ -32,11 +32,11 @@ The theoretical assertions of the VAC architecture were empirically validated ac
   {/* HalfCheetah-v4 */}
   <div className="flex flex-col md:flex-row gap-6 items-center">
     <figure className="w-full md:w-1/2 m-0">
-      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase2/phase2_halfcheetahv4_performance.png" alt="HalfCheetah Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <img src="/results/plots/phase2/phase2_halfcheetahv4_performance.png" alt="HalfCheetah Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
       <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 1: Performance trajectory in HalfCheetah-v4.</figcaption>
     </figure>
     <figure className="w-full md:w-1/2 m-0">
-      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase2/phase2_halfcheetahv4_posterior.png" alt="HalfCheetah Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <img src="/results/plots/phase2/phase2_halfcheetahv4_posterior.png" alt="HalfCheetah Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
       <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 2: Epistemic uncertainty estimation in HalfCheetah-v4.</figcaption>
     </figure>
   </div>
@@ -44,11 +44,11 @@ The theoretical assertions of the VAC architecture were empirically validated ac
   {/* Ant-v4 */}
   <div className="flex flex-col md:flex-row gap-6 items-center border-t border-slate-200 dark:border-slate-700 pt-8">
     <figure className="w-full md:w-1/2 m-0">
-      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase2/phase2_antv4_performance.png" alt="Ant Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <img src="/results/plots/phase2/phase2_antv4_performance.png" alt="Ant Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
       <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 3: Performance trajectory in Ant-v4.</figcaption>
     </figure>
     <figure className="w-full md:w-1/2 m-0">
-      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase2/phase2_antv4_posterior.png" alt="Ant Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <img src="/results/plots/phase2/phase2_antv4_posterior.png" alt="Ant Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
       <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 4: Epistemic uncertainty estimation in Ant-v4.</figcaption>
     </figure>
   </div>
@@ -56,11 +56,11 @@ The theoretical assertions of the VAC architecture were empirically validated ac
   {/* Hopper-v4 */}
   <div className="flex flex-col md:flex-row gap-6 items-center border-t border-slate-200 dark:border-slate-700 pt-8">
     <figure className="w-full md:w-1/2 m-0">
-      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase2/phase2_hopperv4_performance.png" alt="Hopper Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <img src="/results/plots/phase2/phase2_hopperv4_performance.png" alt="Hopper Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
       <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 5: Performance trajectory in Hopper-v4.</figcaption>
     </figure>
     <figure className="w-full md:w-1/2 m-0">
-      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase2/phase2_hopperv4_posterior.png" alt="Hopper Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <img src="/results/plots/phase2/phase2_hopperv4_posterior.png" alt="Hopper Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
     <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 6: Epistemic uncertainty estimation in Hopper-v4.</figcaption>
     </figure>
   </div>
@@ -74,12 +74,12 @@ The empirical validation of this theoretical advantage is depicted below, clearl
 
 <div className="diagram-card flex flex-col items-center mt-6">
   <figure className="w-full md:w-3/4 m-0">
-    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase2/image_9b8d92.png" alt="Regret Analysis" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <img src="/results/plots/phase2/image_9b8d92.png" alt="Regret Analysis" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
     <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 7: Cumulative regret comparison: $\epsilon$-greedy vs Bayesian Thompson Sampling.</figcaption>
   </figure>
 </div>
 
-## Phase 3: SGLD Hyper-posterior — Overcoming Multimodality
+## Phase 3: SGLD Hyper-posterior ??Overcoming Multimodality
 
 While Variational Inference (VI) provides a computationally tractable bound on the marginal likelihood, it typically approximates the true posterior with a unimodal Gaussian family. This inherent simplification aggressively truncates the hypothesis space, failing to capture the complex, multi-modal posterior landscapes often found in high-dimensional deep reinforcement learning.
 
@@ -89,16 +89,16 @@ This multimodal exploration capability proved pivotal in complex, high-dimension
 
 <div className="diagram-card flex flex-col md:flex-row gap-6 items-center mt-6">
   <figure className="w-full md:w-1/2 m-0">
-    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase3/phase3_humanoidv4_performance.png" alt="Humanoid Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <img src="/results/plots/phase3/phase3_humanoidv4_performance.png" alt="Humanoid Performance" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
     <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 7: SGLD successfully navigates the multi-modal reward landscape in Humanoid-v4.</figcaption>
   </figure>
   <figure className="w-full md:w-1/2 m-0">
-    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase3/phase3_humanoidv4_posterior.png" alt="Humanoid Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <img src="/results/plots/phase3/phase3_humanoidv4_posterior.png" alt="Humanoid Posterior" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
     <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 8: Extensive posterior exploration captured by MCMC in high-dimensional space.</figcaption>
   </figure>
 </div>
 
-## Phase 4: DP-SGLD — The Privacy-Utility Trade-off
+## Phase 4: DP-SGLD ??The Privacy-Utility Trade-off
 
 The deployment of reinforcement learning in sensitive domains necessitates rigorous privacy guarantees. We integrated Differential Privacy (DP) directly into the posterior sampling process by leveraging the intrinsic noise of SGLD, formulating **DP-SGLD**.
 
@@ -126,11 +126,11 @@ The generated $\epsilon$-sensitivity and privacy loss graphs mathematically subs
 
 <div className="diagram-card flex flex-col md:flex-row gap-6 items-center mt-6">
   <figure className="w-full md:w-1/2 m-0">
-    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase4/analysis/phase4_halfcheetahv4_epsilon_sensitivity.png" alt="Epsilon Sensitivity" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <img src="/results/plots/phase4/analysis/phase4_halfcheetahv4_epsilon_sensitivity.png" alt="Epsilon Sensitivity" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
     <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 9: Empirical degradation of expected return as a function of the privacy budget $\epsilon$.</figcaption>
   </figure>
   <figure className="w-full md:w-1/2 m-0">
-    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/bayesian-rl-meets-mcmc/results/plots/phase4/analysis/phase4_halfcheetahv4_privacy_budget.png" alt="Privacy Budget" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <img src="/results/plots/phase4/analysis/phase4_halfcheetahv4_privacy_budget.png" alt="Privacy Budget" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
     <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 10: Accumulated privacy loss tracked via RDP sequential composition.</figcaption>
   </figure>
 </div>
