@@ -1,0 +1,72 @@
+---
+title: "Policy Optimisation: Importance Sampling and Information Geometry"
+date: 2025-08-10
+tags: ["TRPO", "Importance Sampling", "Information Geometry", "Natural Gradient", "KL-Divergence"]
+course: "CS285: DEEP REINFORCEMENT LEARNING"
+description: "A statistical deep-dive into policy optimisation: interpreting the TRPO surrogate objective via Importance Sampling and understanding KL-divergence constraints through Information Geometry."
+draft: false
+---
+
+<div className="series-banner">
+  <span className="series-banner__label">Part of the CS285: Deep RL Series</span>
+  <nav className="series-banner__nav">
+    <a href="/coursework/foundations-of-rl" className="series-banner__link">① Foundations of RL</a>
+    <span className="series-banner__sep">·</span>
+    <span className="series-banner__current">② Policy Optimisation & PPO</span>
+    <span className="series-banner__sep">·</span>
+    <a href="/coursework/actor-critic-methods" className="series-banner__link">③ Actor-Critic & SAC</a>
+    <span className="series-banner__sep">·</span>
+    <a href="/coursework/offline-and-meta-rl" className="series-banner__link">④ Offline & Meta-RL</a>
+  </nav>
+</div>
+
+## 1. Surrogate Objective as Importance Sampling
+
+In standard policy gradients, estimating the performance of a new policy $\pi_\theta$ directly from trajectories collected under an old policy $\pi_{\theta_\text{old}}$ is a classic **off-policy evaluation** problem. Statistically, this is resolved using **Importance Sampling (IS)**.
+
+The expected return under the new policy is:
+$$
+J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}[R(\tau)] = \int p_\theta(\tau) R(\tau) \, d\tau
+$$
+
+By multiplying and dividing by the trajectory distribution of the old policy $p_{\theta_\text{old}}(\tau)$, we obtain the IS estimator:
+$$
+J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta_\text{old}}} \left[ \frac{p_\theta(\tau)}{p_{\theta_\text{old}}(\tau)} R(\tau) \right]
+$$
+
+Since the transition dynamics $\mathcal{P}$ cancel out in the probability ratio, the ratio isolates the policy parameters:
+$$
+\frac{p_\theta(\tau)}{p_{\theta_\text{old}}(\tau)} = \prod_{t=0}^T \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_\text{old}}(a_t \mid s_t)}
+$$
+
+However, a product of IS weights over time suffers from **exponential variance growth**. TRPO mitigates this by applying IS marginally at the state-action level, substituting the full return with the Advantage function $A^{\pi_{\theta_\text{old}}}$, yielding the celebrated **Surrogate Objective**:
+$$
+\mathcal{L}(\theta) = \mathbb{E}_{s \sim \rho^{\pi_{\theta_\text{old}}}, a \sim \pi_{\theta_\text{old}}} \left[ \frac{\pi_\theta(a \mid s)}{\pi_{\theta_\text{old}}(a \mid s)} A^{\pi_{\theta_\text{old}}}(s,a) \right]
+$$
+
+This objective is valid statistically only in a small local neighbourhood where the importance weights are well-behaved.
+
+---
+
+## 2. Information Geometry and the Natural Gradient
+
+To enforce this local neighbourhood, TRPO restricts the update by bounding the Kullback-Leibler (KL) divergence. Why KL divergence instead of Euclidean distance $\|\theta - \theta_\text{old}\|_2^2$? This is a profound question answered by **Information Geometry**.
+
+Parameter space (Euclidean) is not isomorphic to probability distribution space. A small step $\Delta\theta$ in Euclidean space can cause a drastically large shift in the actual probability distribution $\pi_\theta$, leading to catastrophic IS variance. 
+
+### The Fisher Information Metric
+
+Information Geometry maps probability distributions as manifolds. The local curvature of this manifold is defined by the **Fisher Information Matrix (FIM)** $F_\theta$, which acts as the Riemannian metric tensor:
+$$
+D_{\text{KL}}(\pi_\theta \,\|\, \pi_{\theta + \Delta\theta}) \approx \frac{1}{2} \Delta\theta^\top F_\theta \Delta\theta
+$$
+where $F_\theta = \mathbb{E}_{\pi_\theta} [\nabla_\theta \log \pi_\theta \nabla_\theta \log \pi_\theta^\top]$.
+
+### The Natural Gradient Update
+
+By performing constrained optimisation in this Riemannian manifold, we find the steepest ascent direction that maximally improves the surrogate objective whilst ensuring a bounded change in the probability distribution. This yields the **Natural Gradient**:
+$$
+\Delta\theta \propto F_\theta^{-1} \nabla_\theta \mathcal{L}(\theta)
+$$
+
+The Natural Gradient fundamentally uncouples the learning dynamics from the arbitrary parameterisation of the neural network, ensuring that the optimization takes invariant, statistically consistent steps across the manifold of policy distributions.
