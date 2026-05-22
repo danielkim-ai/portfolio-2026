@@ -1,0 +1,63 @@
+---
+title: "Foundations of RL: Ergodicity and Stationary Distributions"
+date: 2025-03-15
+tags: ["MDP", "Ergodicity", "Markov Chain", "Stationary Distribution", "Value Functions"]
+course: "CS285: DEEP REINFORCEMENT LEARNING"
+description: "A statistical re-interpretation of Reinforcement Learning: understanding the state visitation distribution through the lens of Markov Chain ergodicity and stationary distributions."
+draft: false
+---
+
+<div className="series-banner">
+  <span className="series-banner__label">Part of the CS285: Deep RL Series</span>
+  <nav className="series-banner__nav">
+    <span className="series-banner__current">① Foundations of RL</span>
+    <span className="series-banner__sep">·</span>
+    <a href="/coursework/policy-optimisation" className="series-banner__link">② Policy Optimisation & PPO</a>
+    <span className="series-banner__sep">·</span>
+    <a href="/coursework/actor-critic-methods" className="series-banner__link">③ Actor-Critic & SAC</a>
+    <span className="series-banner__sep">·</span>
+    <a href="/coursework/offline-and-meta-rl" className="series-banner__link">④ Offline & Meta-RL</a>
+  </nav>
+</div>
+
+## 1. The Markov Decision Process as a Stochastic System
+
+A Markov Decision Process (MDP) is canonically defined as a 5-tuple $\mathcal{M} = (\mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma)$. From a rigorous probabilistic perspective, an MDP under a fixed policy $\pi(a \mid s)$ induces a discrete-time **Markov Chain** over the state space $\mathcal{S}$.
+
+The state transition kernel of this induced Markov chain is obtained by marginalising over the actions:
+$$
+P^\pi(s' \mid s) = \int_{\mathcal{A}} \pi(a \mid s) \mathcal{P}(s' \mid s, a) \, da
+$$
+
+This formulation shifts our perspective: rather than viewing RL purely as sequential reward accumulation, we analyse it as the **control of a stochastic process** to shape its long-term distribution.
+
+---
+
+## 2. Ergodic Condition and the State Visitation Distribution
+
+In infinite-horizon RL, a critical theoretical construct is the **state visitation distribution** $\rho^\pi(s)$. We define the discounted visitation frequency as:
+$$
+\rho^\pi(s) = (1-\gamma) \sum_{t=0}^{\infty} \gamma^t P(s_t = s \mid s_0, \pi)
+$$
+This quantity is fundamental because the RL objective can be perfectly rewritten as an expectation over this stationary-like distribution:
+$$
+J(\pi) = \frac{1}{1-\gamma} \mathbb{E}_{s \sim \rho^\pi, a \sim \pi}[r(s,a)]
+$$
+
+### The Ergodicity Requirement
+
+For the un-discounted infinite-horizon setting ($\gamma \to 1$), $\rho^\pi$ converges to the true **stationary distribution** $d^\pi(s)$ of the Markov Chain. This convergence is guaranteed by the **Ergodic Theorem** if the Markov Chain is:
+1. **Irreducible**: Every state is reachable from every other state (no absorbing traps that isolate sub-graphs).
+2. **Aperiodic**: The chain does not oscillate deterministically between sets of states.
+3. **Positive Recurrent**: The expected return time to any state is finite.
+
+When these ergodic conditions are satisfied, there exists a unique stationary distribution $d^\pi$ satisfying the balance equation:
+$$
+d^\pi(s') = \int_{\mathcal{S}} P^\pi(s' \mid s) d^\pi(s) \, ds
+$$
+
+### Statistical Implications for RL
+
+Viewing RL through the lens of ergodicity reveals deep insights:
+- **Exploration vs. Stationarity**: If the environment is non-ergodic (e.g., contains terminal states or unconnected components), the initial state distribution $p(s_0)$ permanently biases learning. Ergodicity guarantees that the long-term behaviour is independent of the starting state.
+- **Off-Policy Evaluation Bias**: When we evaluate a target policy $\pi$ using data collected by a behaviour policy $\mu$, we face a mismatch not just in action probabilities, but in the structural stationary distributions: $\rho^\pi \neq \rho^\mu$. Correcting for this marginal density ratio $w(s) = \rho^\pi(s)/\rho^\mu(s)$ is one of the profound challenges in modern statistical RL.
