@@ -1,0 +1,80 @@
+---
+title: "SAMPLING/SURVEY THEORY"
+date: 2026-04-15
+tags: ["Sampling Theory", "Offline RL", "Differential Privacy", "Importance Sampling", "Machine Unlearning"]
+course: "UNDERGRAD COURSES FROM YONSEI"
+description: "Connecting classical survey sampling methodologies—Finite Population Inference, Horvitz-Thompson Estimation, and Non-response—to modern Privacy-Preserving Offline Reinforcement Learning."
+draft: false
+---
+
+# STA3123: SAMPLING THEORY IN DATA SCIENCE
+
+## "Bridging Classical Survey Methods and Privacy-Preserving Reinforcement Learning"
+
+While classical Sampling Theory was historically developed for agricultural surveys and national censuses, its mathematical core—estimating population parameters from fractional data under controlled randomness—is profoundly isomorphic to the challenges we face in **Offline Reinforcement Learning (RL)** and **Privacy-Preserving Machine Learning (PPML)**. 
+
+This document explores how the foundational concepts of STA3123 provide a rigorous statistical framework for solving Distributional Shift, Importance Sampling variance, and Machine Unlearning in deep RL systems.
+
+---
+
+## 1. Finite Population Inference and Offline RL Foundations
+
+### Target Population vs. Sample
+In classical statistics, we infer the parameters of a finite **Target Population** $U$ of size $N$ using a **Sample** $S$ of size $n$. 
+
+In the context of **Offline RL**, the entire hypothetical universe of state-action-reward trajectories that an agent *could* experience under all possible policies constitutes the Target Population. However, we only have access to a static, logged dataset $\mathcal{D}$. This dataset $\mathcal{D}$ is exactly our Sample $S$, generated not by uniform random sampling, but by the logging algorithm—the **Behavior Policy ($\pi_\beta$)**. The sampling design (how trajectories are logged) strictly dictates the bias and variance of our downstream policy evaluation.
+
+### Inclusion Probability ($\pi_i$) and Privacy Amplification
+In survey sampling, the inclusion probability $\pi_i = P(i \in S)$ defines the likelihood that the $i$-th element is selected into the sample.
+
+In our privacy-preserving RL research, $\pi_i$ directly maps to the probability that a specific user's trajectory is included in the mini-batch during gradient descent. This mathematical bridge is critical for **Differential Privacy (DP)**. According to the **Privacy Amplification via Subsampling** theorem, if an algorithm is $\epsilon$-DP on the sample $S$, applying it to a random subsample drawn with inclusion probability $q$ amplifies the privacy guarantee to roughly $O(q\epsilon)$-DP. Thus, controlling the inclusion probability $\pi_i$ is not merely a variance-reduction technique; it is a fundamental control knob for tuning the privacy-utility trade-off in DP-SGD.
+
+---
+
+## 2. Estimation Theory: Bias-Variance Trade-off in RL
+
+### Horvitz-Thompson Estimator and Importance Sampling (IS)
+The **Horvitz-Thompson (HT) Estimator** is the cornerstone of unequal probability sampling. To estimate a population total $t_y = \sum_{U} y_i$, the HT estimator inversely weights each sampled unit by its inclusion probability:
+$$
+\hat{t}_{\text{HT}} = \sum_{i \in S} \frac{y_i}{\pi_i}
+$$
+
+This is mathematically identical to **Importance Sampling (IS)** in Off-Policy Evaluation (OPE). When we evaluate a target policy $\pi_e$ using data logged by a behavior policy $\pi_\beta$, we compute the expected return by reweighting the rewards:
+$$
+\hat{J}(\pi_e) = \sum_{\tau \in \mathcal{D}} \left( \prod_{t=0}^T \frac{\pi_e(a_t \mid s_t)}{\pi_\beta(a_t \mid s_t)} \right) R(\tau)
+$$
+
+Just as the HT estimator suffers from extreme variance if $\pi_i$ is close to zero, the RL Importance Sampling estimator suffers from infinite variance when the behavior policy $\pi_\beta(a \mid s)$ approaches zero (i.e., poor coverage). Understanding the HT estimator's variance properties (via the Yates-Grundy-Sen estimator) provides a rigorous statistical foundation for designing clipped IS and Conservative Q-Learning (CQL) algorithms in Offline RL.
+
+### Ratio Estimators and Control Variates
+Sampling theory frequently utilises auxiliary variables $x_i$ (correlated with $y_i$) to construct a **Ratio Estimator**, drastically reducing variance. 
+In Reinforcement Learning, this concept manifests as **Control Variates** and **Baselines** (e.g., subtracting the state-value function $V(s)$ from the Q-value in Advantage Actor-Critic). Both disciplines leverage auxiliary information to reduce the variance of the estimator without introducing statistical bias, thereby increasing the **efficiency** of the learning process.
+
+---
+
+## 3. Complex Sampling Design and Privacy Sensitivity
+
+### Stratified/Cluster Sampling vs. SISA (Sharding)
+**Stratified Sampling** divides the population into mutually exclusive strata, while **Cluster Sampling** divides the population into primary sampling units (PSUs) and samples entire clusters.
+
+This topological partitioning of data is remarkably parallel to **Machine Unlearning** architectures, specifically **SISA (Sharded, Isolated, Sliced, and Aggregated)** training. In SISA, the training dataset is partitioned into isolated "shards" (clusters). If a user requests data deletion, only the specific shard containing their data needs to be retrained, rather than the entire global model. Classical cluster variance formulas perfectly describe the generalization error introduced when aggregating these isolated shards.
+
+### Design-based vs. Model-based Inference
+- **Design-based Inference**: Assumes the data $y_i$ is fixed, and randomness comes solely from the sampling indicator $I_i$.
+- **Model-based Inference**: Assumes a superpopulation model generates the data $y_i$, treating the values themselves as random variables.
+
+In Deep RL, we often heavily rely on Model-based assumptions (e.g., Markov property, stationary transition dynamics). However, under severe **Distributional Shift**, these model assumptions collapse. Injecting DP noise forces us to reconsider the robustness of our estimators. By applying Design-based bounds, we can construct robust off-policy estimators that maintain statistical validity regardless of how severely the underlying environmental dynamics (the superpopulation model) shift over time.
+
+---
+
+## 4. Non-response, Erasure, and Machine Unlearning
+
+### Non-sampling Error and the Right to be Forgotten
+In classical surveys, **Non-response** occurs when selected units refuse to participate, causing a critical Non-sampling Error and severe selection bias.
+
+In the era of privacy legislation (GDPR/CCPA), users exercising their **Right to be Forgotten (Data Deletion)** create dynamic "non-responses" in our training datasets. When a trajectory is purged from an Offline RL buffer, the resulting model exhibits an erasure bias. The data loss is not Missing Completely At Random (MCAR); it is structurally biased depending on who requests deletion.
+
+### Weighting Adjustment and Influence Functions
+Survey statisticians address non-response through **Weighting Adjustments** and **Imputation**, redistributing the weights of missing units to similar responding units.
+
+In Machine Unlearning, we mathematically formalise this process using **Influence Functions**. Instead of retraining the model from scratch, we calculate the exact derivative (influence) that the deleted data point had on the optimal model parameters $\theta^*$. By approximating the inverse Hessian, we update the parameters to algebraically subtract the non-respondent's influence—effectively executing a sophisticated, gradient-based imputation that mathematically guarantees the unlearned state.
