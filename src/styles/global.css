@@ -656,3 +656,66 @@ html.dark .analogy-card__side--approximation {
   font-style: italic;
   color: var(--color-text-secondary) !important;
 }
+/* 式式式 CS285 Series Navigation Banner 式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式式 */
+.series-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--color-accent-light, rgba(99,102,241,0.08)) 0%, transparent 100%);
+  border: 1px solid var(--color-accent, #6366f1);
+  border-left-width: 3px;
+  border-radius: 6px;
+  padding: 0.85rem 1.1rem;
+  margin-bottom: 2rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.series-banner__label {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent, #6366f1);
+  font-size: 0.72rem;
+}
+
+.series-banner__nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--color-text-secondary);
+}
+
+.series-banner__link {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.15s;
+  padding: 0.1rem 0.25rem;
+  border-radius: 3px;
+}
+
+.series-banner__link:hover {
+  color: var(--color-accent, #6366f1);
+  text-decoration: underline;
+}
+
+.series-banner__current {
+  color: var(--color-text-primary);
+  font-weight: 600;
+  padding: 0.1rem 0.25rem;
+}
+
+.series-banner__sep {
+  color: var(--color-text-muted);
+  user-select: none;
+}
+
+@media (max-width: 600px) {
+  .series-banner__nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+  }
+  .series-banner__sep { display: none; }
+}
