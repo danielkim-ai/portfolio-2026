@@ -1,48 +1,53 @@
-<p align="center">
-  <img src="public/assets/symbolic-diagram.svg" width="350" alt="Stats-CS-RL Symbolic Diagram" />
-</p>
+# Daniel's AI Research & Engineering Portfolio
 
-<h1 align="center">ARCHITECTING RELIABLE INTELLIGENCE THROUGH BAYESIAN FOUNDATIONS</h1>
-<h3 align="center">Navigating the nexus of sequential decision-making and statistical rigour</h3>
+I am a Research Assistant at AI-ISL, Yonsei University, building research systems at the intersection of Bayesian reinforcement learning, differential privacy, and machine unlearning. This portfolio gathers implementations, mathematical notes, and reproducible project records for trustworthy sequential decision-making in data-limited and regulated settings.
 
----
+[Download CV](./public/Seok_Daniel_Kim_CV.pdf) | [Portfolio Website](https://danielkim-ai.vercel.app) | [LinkedIn](https://www.linkedin.com/in/danielkim-ai/)
 
-## 🔬 Research Interests
+## Project Showcase
 
-My academic pursuit lies at the intersection of rigorous statistical inference and high-performance machine learning. I am dedicated to interrogating the structural guarantees of intelligent systems.
+### Bayesian RL Meets MCMC
 
-### Bayesian Reinforcement Learning
-**Sample efficiency via uncertainty estimation & Variational inference.**
+Bayesian reinforcement learning experiments focused on sample efficiency, posterior-aware policy learning, SGLD-based recalibration, and regret analysis with the sub-linear target $\tilde{O}(\sqrt{dT})$.
 
-Interrogating the convergence of Bayesian statistics and reinforcement learning to maximise sample efficiency within high-dimensional state spaces. By transitioning beyond conventional point estimation, I am investigating the structural guarantees of uncertainty estimation. This entails leveraging variational inference for robust posterior approximation and quantifying epistemic uncertainty within a Variational Actor-Critic framework.
+[View Details](./projects/bayesian-rl-meets-mcmc/README.md)
 
-### Privacy-Preserving Offline RL
-**Differential privacy guarantees & Machine unlearning in sequential decision-making.**
+### Trustworthy Offline RL via DP & Machine Unlearning
 
-Exploring the structural guarantees of $(\epsilon, \delta)$-Differential Privacy within offline reinforcement learning, particularly concerning sensitive medical and financial logs. Rather than relying on naive noise injection, the objective is to architect utility-optimised mechanisms that negotiate the privacy-utility trade-off via precise optimisation under constraints. This encompasses integrating machine unlearning for efficient policy updates and ensuring robust policy evaluation under stringent privacy boundaries.
+Privacy-preserving offline RL research centered on $(\epsilon, \delta)$-DP, trajectory-level adjacency, conservative value learning under privacy noise, and influence function-based unlearning for deletion requests.
 
----
+[View Details](./projects/trustworthy-offline-rl-via-dp/README.md)
 
-## 🎯 Current Focus
+## Technical Breadth
 
-Rather than mere implementation, my current focus is directed towards interrogating fundamental academic questions:
+| Area | Tools and Methods |
+| --- | --- |
+| Deep Learning | PyTorch, neural actor-critic models, automatic differentiation |
+| Reinforcement Learning | Ray RLlib, MuJoCo, offline RL, CQL/IQL-oriented value learning |
+| Privacy and Unlearning | Opacus, Differential Privacy, trajectory clipping, RDP accounting, influence functions, SISA sharding |
+| Statistical Research | Bayesian inference, MCMC, SGLD, variational inference, regret analysis |
+| Research Engineering | Reproducible experiments, CLI workflows, technical documentation, evaluation diagnostics |
 
-* **Uncertainty Quantification:** How can we construct tight bounds on epistemic uncertainty to prevent catastrophic degradation in out-of-distribution state spaces?
-* **Utility-Optimised Privacy:** To what extent can we integrate $(\epsilon, \delta)$-Differential Privacy into offline policy evaluation without compromising the convergence properties of the target policy?
-* **Algorithmic Unlearning:** What are the theoretical prerequisites for provable machine unlearning in sequential decision-making paradigms, ensuring minimal computational overhead whilst maintaining model integrity?
+## Coursework & Knowledge Base
 
----
+The portfolio site also collects study notes that connect classical statistical foundations to modern RL systems:
 
-## 📬 Contact Information
+- [STA3123: Sampling Theory](https://danielkim-ai.vercel.app/coursework/sta3123-sampling-theory) links finite-population inference, Horvitz-Thompson weighting, privacy amplification, and unlearning-aware sharding.
+- [CS285: Deep Reinforcement Learning Series](https://danielkim-ai.vercel.app/coursework) covers RL foundations, policy optimisation, actor-critic methods, and offline/meta-RL notes.
 
-I welcome discourse with fellow researchers and practitioners regarding potential collaborations or theoretical discussions.
+## Repository Map
 
-* **Email**: [coderpoirot@gmail.com](mailto:coderpoirot@gmail.com) / [daniel1kim@yonsei.ac.kr](mailto:daniel1kim@yonsei.ac.kr)
-* **LinkedIn**: [danielkim-ai](https://www.linkedin.com/in/danielkim-ai/)
-* **Portfolio**: [danielkim-ai.vercel.app](https://danielkim-ai.vercel.app)
+```text
+portfolio/
+  public/Seok_Daniel_Kim_CV.pdf
+  projects/
+    bayesian-rl-meets-mcmc/
+    trustworthy-offline-rl-via-dp/
+  src/content/coursework/
+```
 
-<br/>
+## Contact
 
-<p align="center">
-  <small><em>"The ultimate prerogative of choice must remain anchored in human agency, ensuring accountability within the algorithmic framework."</em></small>
-</p>
+- Email: [coderpoirot@gmail.com](mailto:coderpoirot@gmail.com)
+- Yonsei Email: [daniel1kim@yonsei.ac.kr](mailto:daniel1kim@yonsei.ac.kr)
+- Portfolio: [danielkim-ai.vercel.app](https://danielkim-ai.vercel.app)
