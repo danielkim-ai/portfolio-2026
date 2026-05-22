@@ -122,7 +122,7 @@ This multimodal exploration capability proved pivotal in complex, high-dimension
 
 The deployment of reinforcement learning in sensitive domains necessitates rigorous privacy guarantees. We integrated Differential Privacy (DP) directly into the posterior sampling process by leveraging the intrinsic noise of SGLD, formulating **DP-SGLD**.
 
-### The Mathematical Core: Renyi Differential Privacy (RDP)
+### The Mathematical Core: Rényi Differential Privacy (RDP)
 
 The standard SGLD parameter update is governed by the Langevin diffusion process, discretised as:
 
@@ -130,7 +130,7 @@ $$
 \Delta \theta_t = \frac{\eta_t}{2} \nabla \log p(\theta_t \mid \mathcal{D}) + \sqrt{\eta_t} \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, I)
 $$
 
-This inherent injection of Gaussian noise $\epsilon_t$, while initially designed for posterior exploration, organically functions as a privacy-preserving Gaussian Mechanism. To tightly bound the privacy leakage over successive training iterations, we employed **Renyi Differential Privacy (RDP)**. RDP bounds the $\alpha$-moments of the privacy loss random variable. The privacy cost for a single gradient update, bounded by a gradient clipping threshold $C$ and noise scale $\sigma$, is quantified as:
+This inherent injection of Gaussian noise $\epsilon_t$, while initially designed for posterior exploration, organically functions as a privacy-preserving Gaussian Mechanism. To tightly bound the privacy leakage over successive training iterations, we employed **Rényi Differential Privacy (RDP)**. RDP bounds the $\alpha$-moments of the privacy loss random variable. The privacy cost for a single gradient update, bounded by a gradient clipping threshold $C$ and noise scale $\sigma$, is quantified as:
 
 $$
 D_\alpha (P \parallel Q) \approx \frac{\alpha \eta_t C^2}{2\sigma^2}
@@ -170,7 +170,7 @@ While the integration of MCMC-driven posterior estimation and Differential Priva
 
 Firstly, addressing **non-stationarity** remains a formidable challenge. The current DP-SGLD formulation assumes a stationary reward landscape over the training horizon. In highly non-stationary environments, the carefully calibrated hyperparameter posterior may quickly become misaligned, requiring adaptive resampling mechanisms that detect distribution shifts without violating accumulated privacy budgets.
 
-Secondly, the mandated **gradient clipping** essential for bounding the sensitivity in Renyi Differential Privacy inherently perturbs the contractive properties of the Bellman Operator. By artificially truncating the gradients of the temporal difference (TD) error, the clipped Bellman backup may no longer guarantee convergence to the true optimal value function, potentially inducing a persistent optimality gap. Future research must theoretically formalise the conditions under which clipped Bellman operators maintain Banach fixed-point guarantees.
+Secondly, the mandated **gradient clipping** essential for bounding the sensitivity in Rényi Differential Privacy inherently perturbs the contractive properties of the Bellman Operator. By artificially truncating the gradients of the temporal difference (TD) error, the clipped Bellman backup may no longer guarantee convergence to the true optimal value function, potentially inducing a persistent optimality gap. Future research must theoretically formalise the conditions under which clipped Bellman operators maintain Banach fixed-point guarantees.
 
 ## Conclusion
 
@@ -210,7 +210,7 @@ quantification in data-scarce reinforcement learning. By facilitating
 multimodal hyper-posterior exploration via MCMC, the framework
 significantly enhances sample efficiency. We further incorporate
 Differential Privacy via intrinsic Langevin noise (DP-SGLD),
-bounding the privacy-utility trade-off using Renyi Differential
+bounding the privacy-utility trade-off using R\'{e}nyi Differential
 Privacy (RDP), demonstrating robust locomotion under strict constraints.
 \end{abstract}
 
@@ -265,3 +265,9 @@ balance exploratory utility with rigorous privacy preservation.
 
 \end{document}
 ```
+
+## Licence
+
+The source code of this project is licensed under the [MIT License](https://opensource.org/licenses/MIT). The technical report, experimental data, and visualisations are licensed under the [Creative Commons Attribution 4.0 International (CC-BY-4.0) License](https://creativecommons.org/licenses/by/4.0/).
+
+Copyright &copy; 2026 Daniel Kim.
