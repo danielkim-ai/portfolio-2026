@@ -1,10 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import KnowledgeGraph from '../components/KnowledgeGraph.astro';
-import { getCollection } from 'astro:content';
-
-const allCoursework = await getCollection('coursework', ({ data }) => !data.draft && data.course === 'CS285: DEEP REINFORCEMENT LEARNING');
-const cs285Coursework = allCoursework.sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
 ---
 
 <BaseLayout
@@ -50,32 +46,6 @@ const cs285Coursework = allCoursework.sort((a, b) => a.data.date.valueOf() - b.d
       Hover over nodes to explore connections across Statistics, Computer Systems, and Reinforcement Learning.
     </p>
     <KnowledgeGraph />
-  </section>
-
-  <hr />
-
-  <!-- CS285 Coursework Section -->
-  <section style="margin-bottom: 3.5rem;">
-    <h2 style="font-size: 1.1rem; border-bottom: none; margin-bottom: 1rem;">CS285: Deep Reinforcement Learning (2025)</h2>
-    <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1rem;">
-      A statistical re-interpretation of reinforcement learning fundamentals, policy optimisation, and offline RL.
-    </p>
-    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-      {cs285Coursework.map((entry) => {
-        const dateStr = entry.data.date.toLocaleDateString('en-US', {
-          year: 'numeric', month: 'short', day: 'numeric',
-        });
-        return (
-          <a href={`/coursework/${entry.id}`} style="display: flex; flex-direction: column; padding: 1rem; border: 1px solid var(--color-border-light); border-radius: 6px; background: var(--color-surface); text-decoration: none; transition: border-color 0.18s;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-              <span style="font-family: var(--font-serif); font-size: 1.05rem; color: var(--color-text-primary); font-weight: 500;">{entry.data.title}</span>
-              <span style="font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-muted);">{dateStr}</span>
-            </div>
-            <p style="font-size: 0.85rem; color: var(--color-text-secondary); margin: 0;">{entry.data.description}</p>
-          </a>
-        );
-      })}
-    </div>
   </section>
 
   <hr />
