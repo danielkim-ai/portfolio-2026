@@ -1,0 +1,60 @@
+{
+  "profile": {
+    "name": "Seok Daniel Kim",
+    "title": "Reinforcement Learning & Statistical Inference Researcher"
+  },
+  "education": [
+    {
+      "institution": "Yonsei University",
+      "degree": "B.S. in Computer Science & Applied Statistics",
+      "expectedGraduation": "2027",
+      "keyCoursework": [
+        "Stochastic Processes",
+        "Mathematical Statistics",
+        "Machine Learning",
+        "Computer Architecture",
+        "Algorithm Design"
+      ]
+    }
+  ],
+  "technicalSkills": {
+    "offlineRL": ["IQL", "CQL"],
+    "machineUnlearning": ["SISA", "Certified Deletion"],
+    "influenceFunctions": ["LiSSA"],
+    "toolStack": ["RDP Accountant", "WandB", "PyTorch"]
+  },
+  "researchAndCapstone": [
+    {
+      "title": "AI-ISL Research Internship",
+      "advisor": "Prof. Albert No",
+      "timeline": "Recent",
+      "description": "Led rigorous PTQ (Post-Training Quantization) information theory bound analysis."
+    },
+    {
+      "title": "Episod Capstone Project",
+      "timeline": "Recent",
+      "description": "Architected and designed a Gemini-2.5 based LLM-as-judge rubric evaluation system."
+    }
+  ],
+  "selectedProjects": [
+    {
+      "title": "Trustworthy Offline RL via Differential Privacy and Machine Unlearning",
+      "placement": "Centerpiece",
+      "details": "Achieved a strictly bounded privacy budget (\\\\varepsilon \\\\approx 2.74) while preserving utility. Established trajectory-level adjacency necessity via covariance metrics (\\\\text{Cov}(g_t, g_{t+k}) \\\\neq 0)."
+    },
+    {
+      "title": "Bayesian RL Meets MCMC",
+      "placement": "Core Lineup",
+      "details": "Integrated Variational Actor-Critic with MCMC Thompson Sampling, achieving \\\\tilde{O}(\\\\sqrt{dT}) sub-linear regret."
+    },
+    {
+      "title": "Stability of Bayesian-SAC",
+      "placement": "Core Lineup",
+      "details": "Investigated epistemic uncertainty quantification and stability boundaries in high-dimensional continuous control."
+    }
+  ],
+  "globalNetworkingAndProficiency": {
+    "networkingHighlight": "Engaged in technical networking and advanced medical AI privacy discussions with the OpenAI GTM team.",
+    "englishProficiency": "CEFR C1-C2 (Full Academic & Professional Proficiency)"
+  }
+}
