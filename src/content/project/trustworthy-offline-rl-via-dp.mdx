@@ -1,65 +1,81 @@
 ---
-title: "Trustworthy Offline Reinforcement Learning via Dynamic Privacy Accounting and Machine Unlearning"
+title: "Trustworthy Offline RL via Differential Privacy and Machine Unlearning"
 description: "A domain-agnostic framework integrating trajectory-level Differential Privacy and Implicit Q-Learning (IQL) to protect sequence logs across clinical and financial decision pipelines."
 date: 2026-06-05
-problem: "The vulnerability of sequential decision-making logs to privacy leakage and the lack of auditable, certified deletion paths in offline RL."
-method: "Trajectory-level Differential Privacy combined with Implicit Q-Learning (IQL) and LiSSA-based influence function unlearning."
-result: "Achieved a robust privacy budget ($\\varepsilon \\approx 2.74$) while maintaining near-optimal decision utility across clinical ($\\Delta J \\approx 3.18$) and financial ($\\Delta J \\approx 0.98$) domains."
+problem: "Frequentist transition-level clipping is fundamentally inadequate for sequential decision-making, engendering catastrophic privacy leakage and the destruction of causal structures in longitudinal logs."
+method: "We architected a trajectory-level Rényi Differential Privacy (RDP) framework synergised with Implicit Q-Learning (IQL) and LiSSA-driven unlearning to ensure certified data deletion."
+result: "Yielded a strictly bounded privacy budget ($\\varepsilon \\approx 2.74$) whilst mathematically defending against value function explosion, securing near-optimal utility across healthcare and finance."
 stack: ["Python", "PyTorch", "RDP Accountant", "MIMIC-III Proxy", "FinRL"]
-category: "Offline RL / Sequential Decision Making"
+category: "Reinforcement Learning"
 tags: ["Offline RL", "Differential Privacy", "Machine Unlearning", "Implicit Q-Learning", "Applied Statistics"]
 status: "Completed"
 ---
 
-## Mathematical Foundations
+## The Fallacy of Transition-level DP
 
-The imperative to safeguard sensitive longitudinal records necessitates a robust paradigm for privacy-preserving offline reinforcement learning. Conventional transition-level clipping is fundamentally inadequate for sequential decision-making. By treating each $(s, a, r, s')$ transition as independently sampled, transition-level DP completely ignores and thereby destroys the intrinsic temporal correlations and causal structures of time-series data. To rectify this, we enforce trajectory-level differential privacy. By treating the entire episode as a singular, indivisible privacy unit, this approach aligns with the principle of *auditable minimisation*—ensuring that an individual's complete interaction sequence is protected, rather than disjointed fragments. Formally, we define the trajectory-level sensitivity $\Delta$ as the maximum $L_2$-norm difference in gradients between any two adjacent trajectories, $\tau$ and $\tau'$:
+The imperative to safeguard sensitive longitudinal records necessitates a rigorous paradigm for privacy-preserving offline reinforcement learning. Conventional methodologies overwhelmingly rely on transition-level clipping, a frequentist approach that treats each $(s, a, r, s')$ tuple as an independently and identically distributed (i.i.d.) sample. Statistically, this assumption is profoundly flawed when applied to sequential decision-making. By applying noise and clipping iteratively at the transition level, the algorithm fundamentally destroys the intrinsic causal structure and temporal correlations inherent in time-series data. 
+
+To rectify this theoretical inadequacy, we enforce trajectory-level differential privacy. By evaluating and bounding the sensitivity across the entirety of an episode ($\tau$), this framework natively aligns with the principle of *auditable minimisation*. Rather than fracturing a patient's medical history or a proprietary trading sequence into disjointed, statistically meaningless fragments, trajectory-level adjacency ensures that the mathematical influence of the entire longitudinal record is bounded. Formally, we define the trajectory-level sensitivity $\Delta$ as the maximum $L_2$-norm difference in gradients between any two adjacent trajectories, $\tau$ and $\tau'$:
 
 $$
 \Delta = \max_{\tau, \tau'} \left\| \nabla \ell(\tau) - \nabla \ell(\tau') \right\|_2
 $$
 
-From a statistical perspective, bounding this trajectory-level sensitivity is paramount; it ensures that the influence of any single longitudinal record — such as a patient's complete ICU history or a comprehensive financial trading sequence — remains mathematically bounded. This circumvents the escalating privacy leakage and catastrophic privacy budget accumulation inevitably associated with cumulative transition-level exposures.
+This circumvents the escalating privacy leakage and catastrophic privacy budget accumulation invariably associated with cumulative transition-level exposures. Furthermore, to facilitate the computationally tractable removal of specific trajectories, we employ the Linear Time Stochastic Second-Order Algorithm (LiSSA) for inverse Hessian approximation, denoted as $H_\theta^{-1}\nabla_\theta \ell(\tau_k)$. This establishes a rigorous mechanism for certified data deletion.
 
-Furthermore, our framework seamlessly integrates machine unlearning capabilities. To facilitate the precise and computationally tractable removal of specific trajectories, we employ the Linear Time Stochastic Second-Order Algorithm (LiSSA) for inverse Hessian approximation, denoted as $H_\theta^{-1}\nabla_\theta \ell(\tau_k)$. This is synergistically combined with Sharded, Isolated, Sliced, and Aggregated (SISA) episode sharding, establishing a rigorous mechanism for certified data deletion without necessitating complete model retraining.
+## Core Contribution: IQL vs CQL Deep Dive
 
-## Core Contribution: Why IQL Over CQL?
+The integration of differential privacy noise into offline reinforcement learning exposes a critical architectural vulnerability in prevailing conservative methodologies. Conservative Q-Learning (CQL) is notoriously susceptible to profound instability when Rényi Differential Privacy (RDP) noise is injected into the gradient updates. 
 
-The integration of differential privacy noise into offline reinforcement learning exposes a critical vulnerability in prevailing conservative methodologies. Conservative Q-Learning (CQL), whilst highly effective in deterministic settings, is notoriously susceptible when privacy-calibrated noise is injected. Due to its architectural reliance on sampling out-of-distribution (OOD) actions to penalise the value function, CQL suffers from acute *Bellman Error Amplification*. The superposition of DP noise onto the artificially constructed OOD target values aggressively exacerbates Q-value estimation errors, invariably culminating in a catastrophic value explosion and subsequent policy collapse.
+Due to its structural reliance on sampling out-of-distribution (OOD) actions to penalise the value function, CQL suffers from severe *Bellman Error Amplification*. Mathematically, the superposition of DP noise onto the artificially constructed OOD target values aggressively exacerbates Q-value estimation errors during the Bellman backup. The noise variance scales catastrophically with the horizon, invariably culminating in a *catastrophic explosion* of the value function and subsequent policy collapse.
 
-Conversely, Implicit Q-Learning (IQL) circumvents this vulnerability by exclusively leveraging in-sample (in-distribution) data for policy evaluation. By formulating the value estimation as an expectile regression problem rather than relying on OOD sampling, IQL fundamentally alters the underlying optimisation landscape, rendering it significantly smoother and bounded. This architectural constraint intrinsically bounds the propagation of noise during the Bellman backup. Consequently, IQL demonstrates an extraordinary resilience to profound DP gradient perturbations, enabling the algorithm to maintain exceptional value function convergence and optimally preserve policy utility even under stringent privacy constraints.
+Conversely, Implicit Q-Learning (IQL) stands as the ultimate bastion of numerical stability under extreme privacy perturbations. IQL circumvents the OOD vulnerability by exclusively leveraging in-sample (in-distribution) data for policy evaluation. By formulating the value estimation strictly as an *expectile regression* problem, IQL fundamentally alters the underlying optimisation landscape, rendering it remarkably smooth and rigorously bounded. This architectural constraint intrinsically arrests the propagation of noise variance. Consequently, IQL demonstrates an extraordinary resilience to profound DP gradient perturbations, enabling the algorithm to maintain exceptional convergence properties even under stringent privacy constraints.
+
+## Domain Generalisation: Bridging Healthcare and Finance
+
+The robustness of the proposed framework was empirically validated across two fundamentally disparate operational domains: the MIMIC-III healthcare proxy and the FinRL financial proxy. 
+
+The healthcare domain is notoriously characterised by highly stochastic, sparse rewards, where patient physiological trajectories exhibit profound variance. Conversely, the financial domain operates within a high Signal-to-Noise Ratio (SNR) environment, demanding meticulous exploitation of minute alpha signals. Our trajectory-level DP framework, fortified by the numerical stability of IQL, successfully bridged this generalisation gap. It seamlessly protected highly sensitive ICU biometric indicators and proprietary trading strategies alike, without requiring domain-specific algorithmic recalibration.
 
 ## Featured Cross-Domain Plots
 
-This framework is intrinsically domain-agnostic, providing robust privacy guarantees and sustained utility across disparate high-stakes environments.
+<div className="diagram-card flex flex-col items-center mt-6">
+  <figure className="w-full m-0">
+    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_privacy_utility_medical_iql.png" alt="Trajectory DP-SGD Schedule" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 1: Privacy-Utility Accounting Schedule. The empirical convergence of the adaptive clipping scheduler confirms that a progressive attenuation ($C=1.3 \rightarrow 0.8$) strictly bounds the cumulative privacy budget ($\varepsilon$) whilst maintaining gradient fidelity.</figcaption>
+  </figure>
+</div>
 
-### Plot A: Privacy-Utility Accounting Schedule
+<div className="diagram-card flex flex-col items-center mt-8">
+  <figure className="w-full m-0">
+    <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_privacy_utility_unlearn_final.png" alt="MIA Certified Deletion" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+    <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 2: Machine Unlearning Decoupling. The LiSSA-driven weight calibration mechanism comprehensively restores defensive efficacy against Membership Inference Attacks (MIA), mathematically guaranteeing certified deletion without full retraining.</figcaption>
+  </figure>
+</div>
 
-![Trajectory DP-SGD Schedule](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_privacy_utility_medical_iql.png)
+<div className="diagram-card flex flex-col gap-8 mt-8">
+  <div className="flex flex-col md:flex-row gap-6 items-center">
+    <figure className="w-full md:w-1/2 m-0">
+      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_unlearning_margin_medical_iql.png" alt="Medical Domain MIA Distribution" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 3: Medical Domain MIA Distribution. Successful de-identification ($\varepsilon \approx 2.74$) of sparse-reward ICU sepsis logs.</figcaption>
+    </figure>
+    <figure className="w-full md:w-1/2 m-0">
+      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_utility_tradeoff_medical_iql.png" alt="Medical Utility Trade-off" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 4: Medical Utility Trade-off. The IQL expectile regression arrests performance degradation, retaining stable therapeutic efficacy.</figcaption>
+    </figure>
+  </div>
 
-*Empirical validation of the optimal optimisation trajectory achieved via an adaptive clipping scheduler with progressive attenuation ($C=1.3 \rightarrow 0.8$), illustrating the strictly bounded cumulative privacy budget ($\varepsilon$).*
-
-### Plot B: Machine Unlearning Decoupling
-
-![MIA Certified Deletion](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_privacy_utility_unlearn_final.png)
-
-*Verification of the LiSSA-driven weight calibration mechanism, demonstrating the comprehensive restoration of defensive efficacy against Membership Inference Attacks (MIA) following targeted data deletion requests.*
-
-### Plot C: Medical Domain Benchmarking (MIMIC-III Proxy)
-
-![Medical Domain MIA Distribution](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_unlearning_margin_medical_iql.png)
-
-![Medical Utility Trade-off](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_utility_tradeoff_medical_iql.png)
-
-*Successful, complete de-identification ($\varepsilon \approx 2.74$) of sensitive biometric indicators and medication time-series logs for ICU sepsis patients, whilst retaining remarkably stable therapeutic policy efficacy.*
-
-### Plot D: Financial Domain Benchmarking (FinRL Proxy)
-
-![Financial Domain MIA Distribution](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_unlearning_margin_financial_iql.png)
-
-![Financial Utility Trade-off](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_utility_tradeoff_financial_iql.png)
-
-*Empirical proof of defence against proprietary trading strategy asset leakage within a high-noise financial log environment. The in-sample bias of IQL facilitates a remarkably tight mitigation of performance degradation ($\Delta J \approx 0.98$).*
+  <div className="flex flex-col md:flex-row gap-6 items-center border-t border-slate-200 dark:border-slate-700 pt-8">
+    <figure className="w-full md:w-1/2 m-0">
+      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_unlearning_margin_financial_iql.png" alt="Financial Domain MIA Distribution" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 5: Financial Domain MIA Distribution. Empirical proof of defence against asset leakage within high-SNR financial environments.</figcaption>
+    </figure>
+    <figure className="w-full md:w-1/2 m-0">
+      <img src="https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_utility_tradeoff_financial_iql.png" alt="Financial Utility Trade-off" className="w-full rounded-lg border border-slate-200 dark:border-slate-700" />
+      <figcaption className="text-center text-sm text-slate-500 mt-2">Figure 6: Financial Utility Trade-off. The tightly bounded policy degradation ($\Delta J \approx 0.98$) highlights the numerical stability of the proposed framework.</figcaption>
+    </figure>
+  </div>
+</div>
 
 ## Data-Driven Benchmark Summary
 
