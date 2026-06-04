@@ -33,7 +33,7 @@ This circumvents the escalating privacy budget accumulation invariably associate
 
 ## Strategy 1: Influence Function Unlearning for Deep RL
 
-Furthermore, to facilitate the computationally tractable removal of specific trajectories, we must address the highly non-convex nature of deep RL objectives. We integrate influence function-based unlearning. To approximate the influence of a deleted trajectory $\tau_k$ on the optimal parameters $\hat{\theta}$, we evaluate the inverse Hessian-vector product. To stabilise this within a non-convex landscape, we introduce a damped system:
+Furthermore, to facilitate the computationally tractable removal of specific trajectories, we must address the highly non-convex nature of deep RL objectives by integrating influence function-based unlearning. To approximate the influence of a deleted trajectory $\tau_k$ on the optimal parameters $\hat{\theta}$, we evaluate the inverse Hessian-vector product. To stabilise this within a non-convex landscape, we introduce a damped system:
 
 $$
 \left(H_{\hat{\theta}} + \lambda I\right)v = \nabla_\theta L_k(\hat{\theta})
