@@ -35,29 +35,29 @@ This framework is intrinsically domain-agnostic, providing robust privacy guaran
 
 ### Plot A: Privacy-Utility Accounting Schedule
 
-![Trajectory DP-SGD Schedule](./results/plots/plot_privacy_utility_medical_iql.png)
+![Trajectory DP-SGD Schedule](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_privacy_utility_medical_iql.png)
 
 *Empirical validation of the optimal optimisation trajectory achieved via an adaptive clipping scheduler with progressive attenuation ($C=1.3 \rightarrow 0.8$), illustrating the strictly bounded cumulative privacy budget ($\varepsilon$).*
 
 ### Plot B: Machine Unlearning Decoupling
 
-![MIA Certified Deletion](./results/plots/plot_privacy_utility_unlearn_final.png)
+![MIA Certified Deletion](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_privacy_utility_unlearn_final.png)
 
 *Verification of the LiSSA-driven weight calibration mechanism, demonstrating the comprehensive restoration of defensive efficacy against Membership Inference Attacks (MIA) following targeted data deletion requests.*
 
 ### Plot C: Medical Domain Benchmarking (MIMIC-III Proxy)
 
-![Medical Domain MIA Distribution](./results/plots/plot_unlearning_margin_medical_iql.png)
+![Medical Domain MIA Distribution](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_unlearning_margin_medical_iql.png)
 
-![Medical Utility Trade-off](./results/plots/plot_utility_tradeoff_medical_iql.png)
+![Medical Utility Trade-off](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_utility_tradeoff_medical_iql.png)
 
 *Successful, complete de-identification ($\varepsilon \approx 2.74$) of sensitive biometric indicators and medication time-series logs for ICU sepsis patients, whilst retaining remarkably stable therapeutic policy efficacy.*
 
 ### Plot D: Financial Domain Benchmarking (FinRL Proxy)
 
-![Financial Domain MIA Distribution](./results/plots/plot_unlearning_margin_financial_iql.png)
+![Financial Domain MIA Distribution](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_unlearning_margin_financial_iql.png)
 
-![Financial Utility Trade-off](./results/plots/plot_utility_tradeoff_financial_iql.png)
+![Financial Utility Trade-off](https://raw.githubusercontent.com/danielkim-ai/projects/main/trustworthy-offline-rl-via-dp/results/plots/plot_utility_tradeoff_financial_iql.png)
 
 *Empirical proof of defence against proprietary trading strategy asset leakage within a high-noise financial log environment. The in-sample bias of IQL facilitates a remarkably tight mitigation of performance degradation ($\Delta J \approx 0.98$).*
 
