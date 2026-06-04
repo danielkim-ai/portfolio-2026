@@ -1,28 +1,33 @@
 ---
 title: "Trustworthy Offline Reinforcement Learning via Dynamic Privacy Accounting and Machine Unlearning"
 description: "A domain-agnostic framework integrating trajectory-level Differential Privacy and Implicit Q-Learning (IQL) to protect sequence logs across clinical and financial decision pipelines."
-category: "Sequential Decision-Making"
+date: 2026-06-05
+problem: "The vulnerability of sequential decision-making logs to privacy leakage and the lack of auditable, certified deletion paths in offline RL."
+method: "Trajectory-level Differential Privacy combined with Implicit Q-Learning (IQL) and LiSSA-based influence function unlearning."
+result: "Achieved a robust privacy budget ($\\varepsilon \\approx 2.74$) while maintaining near-optimal decision utility across clinical ($\\Delta J \\approx 3.18$) and financial ($\\Delta J \\approx 0.98$) domains."
+stack: ["Python", "PyTorch", "RDP Accountant", "MIMIC-III Proxy", "FinRL"]
+category: "Offline RL / Sequential Decision Making"
 tags: ["Offline RL", "Differential Privacy", "Machine Unlearning", "Implicit Q-Learning", "Applied Statistics"]
 status: "Completed"
 ---
 
 ## Mathematical Foundations
 
-The imperative to safeguard sensitive longitudinal records necessitates a robust paradigm for privacy-preserving offline reinforcement learning. Conventional transition-level clipping is fundamentally inadequate for sequential decision-making, as it fails to encapsulate the temporal correlations inherent in trajectory data. To rectify this, we enforce trajectory-level differential privacy, formally defining the sensitivity $\Delta$ as the maximum $L_2$-norm difference in gradients between any two adjacent trajectories, $\tau$ and $\tau'$:
+The imperative to safeguard sensitive longitudinal records necessitates a robust paradigm for privacy-preserving offline reinforcement learning. Conventional transition-level clipping is fundamentally inadequate for sequential decision-making. By treating each $(s, a, r, s')$ transition as independently sampled, transition-level DP completely ignores and thereby destroys the intrinsic temporal correlations and causal structures of time-series data. To rectify this, we enforce trajectory-level differential privacy. By treating the entire episode as a singular, indivisible privacy unit, this approach aligns with the principle of *auditable minimisation*—ensuring that an individual's complete interaction sequence is protected, rather than disjointed fragments. Formally, we define the trajectory-level sensitivity $\Delta$ as the maximum $L_2$-norm difference in gradients between any two adjacent trajectories, $\tau$ and $\tau'$:
 
 $$
 \Delta = \max_{\tau, \tau'} \left\| \nabla \ell(\tau) - \nabla \ell(\tau') \right\|_2
 $$
 
-From a statistical perspective, bounding this trajectory-level sensitivity is paramount; it ensures that the influence of any single longitudinal record — such as a patient's complete ICU history or a comprehensive financial trading sequence — remains mathematically bounded, thereby circumventing the escalating privacy leakage associated with cumulative transition-level exposures.
+From a statistical perspective, bounding this trajectory-level sensitivity is paramount; it ensures that the influence of any single longitudinal record — such as a patient's complete ICU history or a comprehensive financial trading sequence — remains mathematically bounded. This circumvents the escalating privacy leakage and catastrophic privacy budget accumulation inevitably associated with cumulative transition-level exposures.
 
 Furthermore, our framework seamlessly integrates machine unlearning capabilities. To facilitate the precise and computationally tractable removal of specific trajectories, we employ the Linear Time Stochastic Second-Order Algorithm (LiSSA) for inverse Hessian approximation, denoted as $H_\theta^{-1}\nabla_\theta \ell(\tau_k)$. This is synergistically combined with Sharded, Isolated, Sliced, and Aggregated (SISA) episode sharding, establishing a rigorous mechanism for certified data deletion without necessitating complete model retraining.
 
 ## Core Contribution: Why IQL Over CQL?
 
-The integration of differential privacy noise into offline reinforcement learning exposes a critical vulnerability in prevailing conservative methodologies. Conservative Q-Learning (CQL), whilst highly effective in deterministic settings, is notoriously susceptible when privacy-calibrated noise is injected. Due to its architectural reliance on sampling out-of-distribution (OOD) actions to penalise the value function, the superposition of DP noise exacerbates Q-value estimation errors, invariably culminating in catastrophic value explosion.
+The integration of differential privacy noise into offline reinforcement learning exposes a critical vulnerability in prevailing conservative methodologies. Conservative Q-Learning (CQL), whilst highly effective in deterministic settings, is notoriously susceptible when privacy-calibrated noise is injected. Due to its architectural reliance on sampling out-of-distribution (OOD) actions to penalise the value function, CQL suffers from acute *Bellman Error Amplification*. The superposition of DP noise onto the artificially constructed OOD target values aggressively exacerbates Q-value estimation errors, invariably culminating in a catastrophic value explosion and subsequent policy collapse.
 
-Conversely, Implicit Q-Learning (IQL) circumvents this vulnerability by exclusively leveraging in-sample (in-distribution) data for policy evaluation. By formulating the value estimation as an expectile regression problem rather than relying on OOD sampling, IQL demonstrates an extraordinary resilience to profound DP gradient perturbations. This architectural constraint intrinsically bounds the propagation of noise, enabling the algorithm to maintain exceptional value function convergence and optimally preserve policy utility even under stringent privacy constraints.
+Conversely, Implicit Q-Learning (IQL) circumvents this vulnerability by exclusively leveraging in-sample (in-distribution) data for policy evaluation. By formulating the value estimation as an expectile regression problem rather than relying on OOD sampling, IQL fundamentally alters the underlying optimisation landscape, rendering it significantly smoother and bounded. This architectural constraint intrinsically bounds the propagation of noise during the Bellman backup. Consequently, IQL demonstrates an extraordinary resilience to profound DP gradient perturbations, enabling the algorithm to maintain exceptional value function convergence and optimally preserve policy utility even under stringent privacy constraints.
 
 ## Featured Cross-Domain Plots
 
