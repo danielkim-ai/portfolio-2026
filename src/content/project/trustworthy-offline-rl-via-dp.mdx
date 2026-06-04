@@ -6,9 +6,11 @@ problem: "Frequentist transition-level clipping is fundamentally inadequate for 
 method: "We architected a trajectory-level Rényi Differential Privacy (RDP) framework synergised with Implicit Q-Learning (IQL) and LiSSA-driven unlearning to ensure certified data deletion."
 result: "Yielded a strictly bounded privacy budget ($\\varepsilon \\approx 2.74$) whilst mathematically defending against value function explosion, securing near-optimal utility across healthcare and finance."
 stack: ["Python", "PyTorch", "RDP Accountant", "MIMIC-III Proxy", "FinRL"]
+githubUrl: "https://github.com/danielkim-ai/projects/tree/main/trustworthy-offline-rl-via-dp"
 category: "Reinforcement Learning"
 tags: ["Offline RL", "Differential Privacy", "Machine Unlearning", "Implicit Q-Learning", "Applied Statistics"]
 status: "Completed"
+draft: false
 ---
 
 ## The Fallacy of Transition-level DP: Why Transition-Level Adjacency is Insufficient
@@ -112,20 +114,6 @@ The ensuing table delineates a comparative synthesis of privacy-utility trade-of
 | **Financial IQL (FinRL)** | $1.50$ | $\approx 2.74$ | $\approx 0.98$ | Proprietary Alpha Strategy Exposure |
 | **Low Privacy Control** | $0.05$ | $\approx 999.17$ | $\approx 2.99$ | Empirical Utility Skyline |
 
-## Repository Access
-
-<div class="diagram-card flex flex-col md:flex-row items-center justify-between p-6 mt-6 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800/50">
-  <div class="flex flex-col mb-4 md:mb-0">
-    <h3 class="text-lg font-semibold text-slate-900 dark:text-slate-100 m-0">Trustworthy Offline RL Source Code</h3>
-    <p class="text-sm text-slate-500 dark:text-slate-400 m-0 mt-1">Access the official PyTorch implementation, RDP Accountant scripts, and reproduction logs on GitHub.</p>
-  </div>
-  <a href="https://github.com/danielkim-ai/projects/tree/main/trustworthy-offline-rl-via-dp" 
-     target="_blank" 
-     rel="noopener noreferrer" 
-     class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md transition-colors no-underline">
-    View Repository
-  </a>
-</div>
 
 ---
 
