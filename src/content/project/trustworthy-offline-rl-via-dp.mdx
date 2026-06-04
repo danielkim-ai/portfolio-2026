@@ -10,9 +10,11 @@ status: "Completed"
 
 The imperative to safeguard sensitive longitudinal records necessitates a robust paradigm for privacy-preserving offline reinforcement learning. Conventional transition-level clipping is fundamentally inadequate for sequential decision-making, as it fails to encapsulate the temporal correlations inherent in trajectory data. To rectify this, we enforce trajectory-level differential privacy, formally defining the sensitivity $\Delta$ as the maximum $L_2$-norm difference in gradients between any two adjacent trajectories, $\tau$ and $\tau'$:
 
-$$ \Delta = \max_{\tau, \tau'} \left\| \nabla \ell(\tau) - \nabla \ell(\tau') \right\|_2 $$
+$$
+\Delta = \max_{\tau, \tau'} \left\| \nabla \ell(\tau) - \nabla \ell(\tau') \right\|_2
+$$
 
-From a statistical perspective, bounding this trajectory-level sensitivity is paramount; it ensures that the influence of any single longitudinal record (e.g., a patient's complete ICU history or a comprehensive financial trading sequence) remains mathematically bounded, thereby circumventing the escalating privacy leakage associated with cumulative transition-level exposures.
+From a statistical perspective, bounding this trajectory-level sensitivity is paramount; it ensures that the influence of any single longitudinal record — such as a patient's complete ICU history or a comprehensive financial trading sequence — remains mathematically bounded, thereby circumventing the escalating privacy leakage associated with cumulative transition-level exposures.
 
 Furthermore, our framework seamlessly integrates machine unlearning capabilities. To facilitate the precise and computationally tractable removal of specific trajectories, we employ the Linear Time Stochastic Second-Order Algorithm (LiSSA) for inverse Hessian approximation, denoted as $H_\theta^{-1}\nabla_\theta \ell(\tau_k)$. This is synergistically combined with Sharded, Isolated, Sliced, and Aggregated (SISA) episode sharding, establishing a rigorous mechanism for certified data deletion without necessitating complete model retraining.
 
@@ -26,48 +28,33 @@ Conversely, Implicit Q-Learning (IQL) circumvents this vulnerability by exclusiv
 
 This framework is intrinsically domain-agnostic, providing robust privacy guarantees and sustained utility across disparate high-stakes environments.
 
-<div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '2rem', marginBottom: '2rem' }}>
-  <figure style={{ margin: 0 }}>
-    <img src="./results/plots/plot_privacy_utility_medical_iql.png" alt="Trajectory DP-SGD Schedule" style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
-    <figcaption style={{ fontSize: '0.9rem', color: 'var(--color-text-muted, #6b7280)', marginTop: '0.75rem', lineHeight: '1.4' }}>
-      <strong>Plot A: Privacy-Utility Accounting Schedule.</strong> Empirical validation of the optimal optimisation trajectory achieved via an adaptive clipping scheduler with progressive attenuation ($C=1.3 \rightarrow 0.8$), illustrating the strictly bounded cumulative privacy budget ($\varepsilon$).
-    </figcaption>
-  </figure>
-  <figure style={{ margin: 0 }}>
-    <img src="./results/plots/plot_privacy_utility_unlearn_final.png" alt="MIA Certified Deletion" style={{ width: '100%', borderRadius: '12px', boxShadow: '0 4px 6px rgba(0,0,0,0.1)' }} />
-    <figcaption style={{ fontSize: '0.9rem', color: 'var(--color-text-muted, #6b7280)', marginTop: '0.75rem', lineHeight: '1.4' }}>
-      <strong>Plot B: Machine Unlearning Decoupling.</strong> Verification of the LiSSA-driven weight calibration mechanism, demonstrating the comprehensive restoration of defensive efficacy against Membership Inference Attacks (MIA) following targeted data deletion requests.
-    </figcaption>
-  </figure>
-</div>
+### Plot A: Privacy-Utility Accounting Schedule
 
-### Medical Domain Benchmarking (MIMIC-III Proxy)
+![Trajectory DP-SGD Schedule](./results/plots/plot_privacy_utility_medical_iql.png)
 
-<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>
-  <figure style={{ width: '50%', margin: 0 }}>
-    <img src="./results/plots/plot_unlearning_margin_medical_iql.png" alt="Medical Domain MIA Distribution" style={{ width: '100%', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.05)' }} />
-  </figure>
-  <figure style={{ width: '50%', margin: 0 }}>
-    <img src="./results/plots/plot_utility_tradeoff_medical_iql.png" alt="Medical Utility Trade-off" style={{ width: '100%', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.05)' }} />
-  </figure>
-</div>
-<p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted, #6b7280)', marginBottom: '2.5rem', textAlign: 'center', padding: '0 1rem' }}>
-  <strong>Plot C:</strong> Successful, complete de-identification ($\varepsilon \approx 2.74$) of sensitive biometric indicators and medication time-series logs for ICU sepsis patients, whilst retaining remarkably stable therapeutic policy efficacy.
-</p>
+*Empirical validation of the optimal optimisation trajectory achieved via an adaptive clipping scheduler with progressive attenuation ($C=1.3 \rightarrow 0.8$), illustrating the strictly bounded cumulative privacy budget ($\varepsilon$).*
 
-### Financial Domain Benchmarking (FinRL Proxy)
+### Plot B: Machine Unlearning Decoupling
 
-<div style={{ display: 'flex', gap: '1rem', marginTop: '1rem', marginBottom: '0.5rem' }}>
-  <figure style={{ width: '50%', margin: 0 }}>
-    <img src="./results/plots/plot_unlearning_margin_financial_iql.png" alt="Financial Domain MIA Distribution" style={{ width: '100%', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.05)' }} />
-  </figure>
-  <figure style={{ width: '50%', margin: 0 }}>
-    <img src="./results/plots/plot_utility_tradeoff_financial_iql.png" alt="Financial Utility Trade-off" style={{ width: '100%', borderRadius: '8px', border: '1px solid rgba(0,0,0,0.05)' }} />
-  </figure>
-</div>
-<p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted, #6b7280)', marginBottom: '2.5rem', textAlign: 'center', padding: '0 1rem' }}>
-  <strong>Plot D:</strong> Empirical proof of defence against proprietary trading strategy asset leakage within a high-noise financial log environment. The in-sample bias of IQL facilitates a remarkably tight mitigation of performance degradation ($\Delta J \approx 0.98$).
-</p>
+![MIA Certified Deletion](./results/plots/plot_privacy_utility_unlearn_final.png)
+
+*Verification of the LiSSA-driven weight calibration mechanism, demonstrating the comprehensive restoration of defensive efficacy against Membership Inference Attacks (MIA) following targeted data deletion requests.*
+
+### Plot C: Medical Domain Benchmarking (MIMIC-III Proxy)
+
+![Medical Domain MIA Distribution](./results/plots/plot_unlearning_margin_medical_iql.png)
+
+![Medical Utility Trade-off](./results/plots/plot_utility_tradeoff_medical_iql.png)
+
+*Successful, complete de-identification ($\varepsilon \approx 2.74$) of sensitive biometric indicators and medication time-series logs for ICU sepsis patients, whilst retaining remarkably stable therapeutic policy efficacy.*
+
+### Plot D: Financial Domain Benchmarking (FinRL Proxy)
+
+![Financial Domain MIA Distribution](./results/plots/plot_unlearning_margin_financial_iql.png)
+
+![Financial Utility Trade-off](./results/plots/plot_utility_tradeoff_financial_iql.png)
+
+*Empirical proof of defence against proprietary trading strategy asset leakage within a high-noise financial log environment. The in-sample bias of IQL facilitates a remarkably tight mitigation of performance degradation ($\Delta J \approx 0.98$).*
 
 ## Data-Driven Benchmark Summary
 
@@ -80,18 +67,9 @@ The ensuing table delineates a comparative synthesis of privacy-utility trade-of
 | **Financial IQL (FinRL)** | $1.50$ | $\approx 2.74$ | $\approx 0.98$ | Proprietary Alpha Strategy Exposure |
 | **Low Privacy Control** | $0.05$ | $\approx 999.17$ | $\approx 2.99$ | Empirical Utility Skyline |
 
-<div style="display: flex; justify-content: center; margin-top: 3.5rem; margin-bottom: 2rem;">
-  <a href="https://github.com/danielkim-ai/projects/tree/main/trustworthy-offline-rl-via-dp"
-     target="_blank"
-     rel="noopener noreferrer"
-     style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.875rem 2rem; background-color: #0f172a; color: #ffffff; text-decoration: none; font-weight: 600; font-size: 1rem; letter-spacing: 0.025em; border-radius: 9999px; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.4); transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path>
-      <path d="M9 18c-4.51 2-5-2-7-2"></path>
-    </svg>
-    Access Source Code
-  </a>
-</div>
+## Repository Access
+
+[**Access Source Code on GitHub**](https://github.com/danielkim-ai/projects/tree/main/trustworthy-offline-rl-via-dp)
 
 ---
 
@@ -99,3 +77,4 @@ The ensuing table delineates a comparative synthesis of privacy-utility trade-of
 
 This research line, alongside its associated algorithmic specifications, empirical logs, and diagnostic artefacts, is licensed under a **Creative Commons Attribution 4.0 International Licence (CC-BY-4.0)**. Academic or commercial derivative works must provide appropriate credit, cite the original repository framework, and indicate if modifications were made.
 
+Copyright &copy; 2026 Daniel Kim.
